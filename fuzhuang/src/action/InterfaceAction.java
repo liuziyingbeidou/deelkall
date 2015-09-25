@@ -1117,9 +1117,9 @@ public class InterfaceAction extends BaseAction{
 		//下口
 		String specXkId = request.getParameter("specXkId");
 		
-		String wh = " and 1=2";
+		String wh = " 1=2";
 		if((typeId != null && !"".equals(typeId)) && (specid != null && !"".equals(specid))){
-			wh = " and proclassid="+typeId + " and specid="+specid;
+			wh = " proclassid="+typeId + " and specid="+specid;
 		}
 		if(!CommUtil.isNull(specQpId)){
 			wh += " and spec_qpid ="+specQpId;
@@ -1127,8 +1127,7 @@ public class InterfaceAction extends BaseAction{
 		if(!CommUtil.isNull(specXkId)){
 			wh += " and spec_xkid ="+specXkId;
 		}
-		
-		List<StinfoVO> list = iHibernateDAO.findAll(StinfoVO.class, " ifnull(dr,0)=0 "+wh);
+		List<StinfoVO> list = iHibernateDAO.findAll(StinfoVO.class, wh,"vsize","asc");
 		String[] excludes = new String[]{"class","condmap","selected","userValue","ts","dr","vdef1","vdef2",
 				"vdef3","vdef4","vdef5"};
 		renderJson(list,JsonUtils.configJson(excludes));
