@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+
+		 <!-- Database connection settings -->
+	  	<property name="proxool.pool_alias">DBPool</property>
+		<property name="proxool.xml">proxool.xml</property>
+		<property name="connection.provider_class">
+			org.hibernate.connection.ProxoolConnectionProvider
+		</property>
+		
+		<!-- Echo all executed SQL to stdout -->
+	  
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+	
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		
+		<!-- Enable Hibernate's automatic session context management 
+        <property name="current_session_context_class">thread</property>
+		 -->
+		<property name="current_session_context_class">org.springframework.orm.hibernate3.SpringSessionContext</property>
+		 
+		<property name="hibernate.hbm2ddl.auto">update</property>
+	
+		<!-- <mapping resource="model/User.hbm.xml"/> -->
+		<!-- 用户 -->
+		<mapping class="model.User"/>
+		<!-- 料件 -->
+		<mapping class="model.materials.MaterialsVO"/>
+		<mapping class="model.materials.MateChildVO"/>
+		
+		<!-- 基础档案 -->
+		<mapping class="model.basedoc.BaseDocVO"/> 
+		<mapping class="model.basedoc.BaseDocSoVO"/> 
+		<mapping class="model.basedoc.DocVarietyVO"/>
+		
+		<!--特殊档案  -->
+		<mapping class="model.special.SpecialVO"/>
+		
+		<!--部件  -->
+		<mapping class="model.parts.MasterVO"/>
+		<mapping class="model.parts.SubPartBVO"/>
+		<mapping class="model.parts.SubPartVO"/>
+		
+		<!--品类  -->
+		<mapping class="model.proclass.ProclassBBVO"/>
+		<mapping class="model.proclass.ProclassBVO"/>
+		<mapping class="model.proclass.ProclassVO"/>
+		<mapping class="model.proclass.TemClassVO"/>
+		<mapping class="model.proclass.TemSubclassVO"/>
+		<!--面料、里料、包装材料  -->
+		<mapping class="model.auxiliary.AuxiliaryVO"/>
+		<mapping class="model.auxiliary.AuxiliaryBVO"/>
+		<mapping class="model.auxiliary.AuxiliaryDefBVO"/>
+		
+		<!--尺码  -->
+		<mapping class="model.size.StinfoVO"/>
+		<mapping class="model.size.StinfoBVO"/>
+		<mapping class="model.size.LtinfoVO"/>
+		<mapping class="model.size.SizeDocVO"/>
+		<mapping class="model.size.SizeDocTypeVO"/>
+		
+		<!--模型管理  -->
+		<mapping class="model.mold.ModelTypeVO"/>
+		<mapping class="model.mold.ModelFolderVO"/>
+		<mapping class="model.mold.ModelVO"/>
+		<mapping class="model.mold.ModelBVO"/>
+		
+		<!--定价方案管理  -->
+		<mapping class="model.scheme.SchemeVO"/>
+		<mapping class="model.scheme.SchemeBVO"/>
+		
+		<!--BOM表管理  -->
+		<mapping class="model.bomtb.CfeedVO"/>
+		<mapping class="model.bomtb.CfeedBVO"/>
+		<mapping class="model.bomtb.BtcconfigVO"/>
+		<mapping class="model.bomtb.BtcconfigBVO"/>
+		
+		<!-- 门店管理 -->
+		<mapping class="model.sp.system.SpUserVO"/>
+		<mapping class="model.sp.system.DiyInfoVO"/>
+	</session-factory>
+</hibernate-configuration>
