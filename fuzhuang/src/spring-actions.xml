@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	
+	<bean id="manageAction" class="action.ManageAction" scope="prototype">
+		<property name="userDao"><ref bean="userDao" /></property>
+		<property name="mateChildDao"><ref bean="mateChildDao" /></property>
+		<property name="materialsDao"><ref bean="materialsDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 基础档案 -->
+	<bean id="baseDocAction" class="action.basedoc.BaseDocAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 特殊档案 -->
+	<bean id="specialAction" class="action.special.SpecialAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 面料-里料-包装材料档案 -->
+	<bean id="auxiliaryAction" class="action.auxiliary.AuxiliaryAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 面料 -->
+	<bean id="fabricAction" class="action.fabric.FabricAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 里料 -->
+	<bean id="liningAction" class="action.lining.LiningAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 辅料 -->
+	<bean id="accessoriesAction" class="action.accessories.AccessoriesAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 包装材料 -->
+	<bean id="packingAction" class="action.packing.PackingAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 外包商品 -->
+	<bean id="outsourceAction" class="action.outsource.OutsourceAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 部件-->
+	<bean id="partAction" class="action.parts.PartAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 品类-->
+	<bean id="proClassAction" class="action.proclass.ProClassAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 品类类别-->
+	<bean id="temtypeAction" class="action.temtype.TemtypeAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 尺码-->
+	<bean id="sizeAction" class="action.size.SizeAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 模型管理-->
+	<bean id="moldAction" class="action.mold.MoldAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	
+	<!-- 定价方案管理-->
+	<bean id="schemeAction" class="action.scheme.SchemeAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- BOM表管理-->
+	<bean id="bomTbAction" class="action.bomtb.BomTbAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!--门店管理-->
+	<bean id="spUserAction" class="action.shop.SpUserAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!--系统管理-->
+	<bean id="systemAction" class="action.system.SystemAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+	<!-- 公共接口 -->
+	<bean id="interfaceAction" class="action.InterfaceAction" scope="prototype">
+		<property name="iMyHibernateDao"><ref bean="iMyHibernateDao" /></property>
+		<property name="iHibernateDAO"><ref bean="iHibernateDAO" /></property>
+	</bean>
+</beans>
