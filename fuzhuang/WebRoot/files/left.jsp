@@ -420,7 +420,7 @@ function list_tree(idstr){
       </table>
 	  
 	  <table id="subtree8"  style="DISPLAY: none" width="80%" border="0" align="center" cellpadding="0" cellspacing="0" class="left-table02">
-        <tr>
+        <tr style="DISPLAY: none">
           <td width="9%" height="20" ><img id="img8-1" class="img-tree" src="../images/ico04.gif" width="8" height="12" /></td>
           <td width="91%"><a href="javascript:" target="mainFrame" class="left-font03" onClick="list_tree('8-1');">体型特征档案</a></td>
         </tr>
