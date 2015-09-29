@@ -142,8 +142,23 @@ public interface IConstant {
 	public static final String PRO_XIFUSHANGYI_ID = "xifushangyi";
 	//BOM分隔符
 	public static final String BOM_SPLIT = ";;;";
-	//前台传入的BOM基础数据分割符
+	//前台传入的BOM返回id间分割符
 	public static final String BOM_3D_SPLIT = "#";
+	//前台传入的BOM套装分割符
+	public static final String BOM_3DTZ_SPLIT = "&";
 	//返回前台时，id和BOm的分隔符
 	public static final String BOM_IDS_3D_SPLIT = "@";
+	//规格中 分隔符
+	public static final String SPEC_3D_SPLIT = "#";
+	
+	/**以下是BOM表料件对应的简码**/
+	//面料
+	public static final String BOM_JC_FABRIC = "fabric";
+	//里料
+	public static final String BOM_JC_LINING = "lining";
+	//袖里料
+	public static final String BOM_JC_SLEEVELINING = "sleeveLining";
+	//后背用料
+	public static final String BOM_JC_BACKFABRIC = "backFabric";
+	
 }

@@ -5,11 +5,8 @@
 package util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
 
 /**
  * @author liuzy
@@ -199,7 +196,7 @@ public class CommUtil {
 		          }
 		  
 		//3 .判断是否为汉字
-		public boolean vd(String str){
+		public static boolean vd(String str){
 		   
 		    char[] chars=str.toCharArray(); 
 		    boolean isGB2312=false; 
@@ -219,5 +216,39 @@ public class CommUtil {
 		    } 
 		    return isGB2312; 
 		}
-
+		// 判断一个字符串是否都为数字  
+		public static boolean isDigit(String strNum) {  
+		    return strNum.matches("[0-9]{1,}");  
+		}  
+		  
+		// 判断一个字符串是否都为数字  
+		public static boolean isDigitByReg(String strNum) {  
+		    Pattern pattern = Pattern.compile("[0-9]{1,}");  
+		    Matcher matcher = pattern.matcher((CharSequence) strNum);  
+		    return matcher.matches();  
+		}  
+		  
+		   //截取数字  
+		   public static String getNumbers(String content) {  
+		       Pattern pattern = Pattern.compile("\\d+");  
+		       Matcher matcher = pattern.matcher(content);  
+		       while (matcher.find()) {  
+		           return matcher.group(0);  
+		       }  
+		       return "";  
+		   }  
+		  
+		// 截取非数字  
+		public static String splitNotNumber(String content) {  
+		    Pattern pattern = Pattern.compile("\\D+");  
+		    Matcher matcher = pattern.matcher(content);  
+		    while (matcher.find()) {  
+		        return matcher.group(0);  
+		    }  
+		    return "";  
+		}  
+		
+		public static void main(String[] args){
+			System.out.println(getNumbers("123CM"));
+		}
 }

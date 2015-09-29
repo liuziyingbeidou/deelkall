@@ -41,7 +41,7 @@ public class BtcconfigBVO extends IdEntity {
 	//备注
 	private String vmemo;
 	//自定义项
-	private String vdef1;
+	private String vdef1;//使用
 	private String vdef2;
 	private String vdef3;
 	private String vdef4;
