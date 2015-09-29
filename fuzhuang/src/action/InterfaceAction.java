@@ -12,6 +12,7 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import model.BomVO;
 import model.auxiliary.AuxiliaryVO;
 import model.basedoc.BaseDocSoVO;
 import model.basedoc.BaseDocVO;
@@ -1623,7 +1624,7 @@ public class InterfaceAction extends BaseAction{
 	 */
 	@Transactional
 	public void toBuildBom(){
-		String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
+		String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"23#1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
 		//bomStr = bomStr +"#"+ "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"1\"},\"diyPro\":\"23\",\"diyCode\":\"02\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
@@ -1634,7 +1635,7 @@ public class InterfaceAction extends BaseAction{
 		StringBuffer ids = new StringBuffer();//bom对应的表主键
 		
 		if(srcBom != null && !"".equals(srcBom)){
-			String[] arrayBom = srcBom.split("#");
+			String[] arrayBom = srcBom.split(IConstant.BOM_3DTZ_SPLIT);
 			int len = arrayBom.length;
 			for (int i = 0; i < len; i++) {
 				String[] abom = getBomByCon(arrayBom[i]);
@@ -1660,11 +1661,12 @@ public class InterfaceAction extends BaseAction{
 		JSONObject  bomJson = JSONObject.fromObject(srcBom);
 		Object diyPro = bomJson.get("diyPro");//品类id
 		Object diyCode = bomJson.get("diyCode");//品类编码
+		Object diyName = bomJson.get("diyName");//品类名称
 		Object diyFra = bomJson.get("diyFra");//面料
 		Object diyLin = bomJson.get("diyLin");//里料
 		Object diySubCont = bomJson.get("diySubCont");//子部件
 		
-		//面料 JSON对象信息
+		//面料 JSON对象信息--fabric 
 		JSONObject fraJson = JSONObject.fromObject(diyFra);
 		
 		/**
@@ -1706,12 +1708,44 @@ public class InterfaceAction extends BaseAction{
 		 */
 		List<BtcconfigBVO> list_bom = getBOMByPro(diyPro+"");
 		
+		/**组织BOM-start**/
+		//面料
+		orgBom(list_bom,fraJson,IConstant.BOM_JC_FABRIC);
+		//衣里料、里布用料
+		orgBom(list_bom,lininJson,IConstant.BOM_JC_LINING);
+		//袖里料
+		orgBom(list_bom,linSlvJson,IConstant.BOM_JC_SLEEVELINING);
+		//后背用料 
+		orgBom(list_bom,linSlvJson,IConstant.BOM_JC_BACKFABRIC);
+		/**组织BOM-end**/
+		
 		/**
 		 * 组织好的BOM信息
 		 */
-		String newBom = "[{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"00025555\"}]";
+		String newBom = "";
+		//String newBom = "[{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330002\",\"tc_aah06\":\"1\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0001\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330003\",\"tc_aah06\":\"2\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"0002\"},{\"tc_aah01\":\"7EUC025S105DS-0000\",\"tc_aah02\":\"西服上衣\",\"tc_aah03\":\"\",\"tc_aah04\":\"PYT0022\",\"tc_aah05\":\"11121330004\",\"tc_aah06\":\"3\",\"tc_aah07\":\"2\",\"tc_aah08\":\"1\",\"tc_aah09\":\"00025555\"}]";
 		//获得成品编码
 		String vcode = getProCode(diyCode+"");
+		
+		List<BomVO> listbom = new ArrayList<BomVO>();
+		//转换VO
+		if(list_bom != null){
+			for (BtcconfigBVO bvo : list_bom) {
+				BomVO vo = new BomVO();
+				vo.setTc_aah01(vcode);
+				vo.setTc_aah02(diyName+"");
+				vo.setTc_aah03(null);
+				vo.setTc_aah04(bvo.getVdef1());
+				vo.setTc_aah05(bvo.getVcode());
+				vo.setTc_aah06(bvo.getVserial());
+				vo.setTc_aah07(bvo.getNunitmny()+"");
+				vo.setTc_aah08(1+"");
+				vo.setTc_aah09(bvo.getVjobnum());
+				listbom.add(vo);
+			}
+			JSONArray JSONArray = net.sf.json.JSONArray.fromObject(listbom,JsonUtils.configJson("yyyy-MM-dd"));
+			newBom = JSONArray.toString();
+		}
 		DiyInfoVO diyInfoVO = new DiyInfoVO();
 		diyInfoVO.setVcode(vcode);
 		diyInfoVO.setVbom(newBom);
@@ -1725,6 +1759,48 @@ public class InterfaceAction extends BaseAction{
 		return backStr;
 	}
 	
+	/**
+	 * @Description: 设置耗料到BOM
+	 * @param 
+	 * @return void
+	 */
+	public void orgBom(List<BtcconfigBVO> list_bom,JSONObject json,String vsn){
+		if(!CommUtil.isNull(json)){
+			BtcconfigBVO vo = new BtcconfigBVO();
+			vo.setVcode(json.getString("code"));
+			String spec = json.getString("specname");
+			if(!CommUtil.isNull(spec)){
+				String[] aspec = spec.split(IConstant.SPEC_3D_SPLIT);
+				if(aspec.length == 2){
+					vo.setVspec(CommUtil.getNumbers(aspec[1]));
+					setBomEm(list_bom,vsn,vo);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @Description: 更新BOM
+	 * @param 
+	 * @return void
+	 */
+	public void setBomEm(List<BtcconfigBVO> list_bom,String vsn,BtcconfigBVO btvo){
+		if(list_bom != null){
+			for (BtcconfigBVO btcconfigBVO : list_bom) {
+				String vsname = btcconfigBVO.getVsname();
+				if(vsn.equals(vsname)){
+					btcconfigBVO.setVcode(btvo.getVcode());
+					//单耗（原幅宽*耗料/现幅宽）
+					String vspec = btcconfigBVO.getVspec();
+					Double dh = btcconfigBVO.getNunitmny();
+					Double dspec = Double.valueOf(vspec);
+					btcconfigBVO.setNunitmny(dh * dspec);
+					//规格
+					btcconfigBVO.setVspec(btvo.getVspec());
+				}
+			}
+		}
+	}
 
 	/**
 	 * @Description: 品类编码
@@ -1823,7 +1899,7 @@ public class InterfaceAction extends BaseAction{
 		}
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append(" b.vcode,b.vname,b.vsname,b.vspec,b.nunitmny,b.vjobnum,b.vmemo");
+		sql.append(" b.vcode,b.vname,b.vsname,b.vspec,b.nunitmny,b.vjobnum,b.vmemo,c.vproClass as vdef1");
 		sql.append(" from fz_btcconfig c");
 		sql.append(" left join fz_btcconfig_b b");
 		sql.append(" on c.id=b.btcId");
@@ -1851,7 +1927,7 @@ public class InterfaceAction extends BaseAction{
 				dto.setNunitmny(CommUtil.isNullOrEm(arry[4]) ? null : Double.valueOf(arry[4].toString()));
 				dto.setVjobnum(CommUtil.isNullOrEm(arry[5]) ? null : arry[5].toString());
 				dto.setVmemo(CommUtil.isNullOrEm(arry[6]) ? null : arry[6].toString());
-				
+				dto.setVdef1(CommUtil.isNullOrEm(arry[7]) ? null : arry[7].toString());
 				list.add(dto);
 			}
 		}
