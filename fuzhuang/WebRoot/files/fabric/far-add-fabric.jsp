@@ -236,20 +236,28 @@ function openIcis(proclassid,msg)
 	for ( var i = 0; i < all1.length; i++) {
 		if (all1[i].proclassid == proclassid) {
 			$("#icisLine").val(all1[i].icisLine);
+			$("#icisLineNM").val(all1[i].icisLineNM);
 			$("#icisLineNM-text").text(all1[i].icisLineNM);
 			$("#icisButton").val(all1[i].icisButton);
+			$("#icisButtonNM").val(all1[i].icisButtonNM);
 			$("#icisButtonNM-text").text(all1[i].icisButtonNM);
 			$("#icisLining").val(all1[i].icisLining);
+			$("#icisLiningNM").val(all1[i].icisLiningNM);
 			$("#icisLiningNM-text").text(all1[i].icisLiningNM);
 			$("#icisXLining").val(all1[i].icisXLining);
+			$("#icisXLiningNM").val(all1[i].icisXLiningNM);
 			$("#icisXLiningNM-text").text(all1[i].icisXLiningNM);
 			$("#icisHBLining").val(all1[i].icisHBLining);
+			$("#icisHBLiningNM").val(all1[i].icisHBLiningNM);
 			$("#icisHBLiningNM-text").text(all1[i].icisHBLiningNM);
 			$("#icisBagging").val(all1[i].icisBagging);
+			$("#icisBaggingNM").val(all1[i].icisBaggingNM);
 			$("#icisBaggingNM-text").text(all1[i].icisBaggingNM);
 			$("#icisComponent").val(all1[i].icisComponent);
+			$("#icisComponentNM").val(all1[i].icisComponentNM);
 			$("#icisComponentNM-text").text(all1[i].icisComponentNM);
 			$("#iciszipper").val(all1[i].iciszipper);
+			$("#iciszipperNM").val(all1[i].iciszipperNM);
 			$("#iciszipperNM-text").text(all1[i].iciszipperNM);
 			break;
 		}
