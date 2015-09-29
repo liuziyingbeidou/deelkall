@@ -85,7 +85,7 @@ function getMobFra(){
 							<option value="4">包装材料</option>
 							<option value="5">配饰</option>
 							<option value="6">特殊档案</option>
-							<option value="7">体型特征</option>
+							<!--<option value="7">体型特征</option>-->
 							<option value="8">模型</option>
 						</select>
 						<input type="button" onclick="javascript:autoclean()" name="Submit" value="自助清理" class="button"/>
