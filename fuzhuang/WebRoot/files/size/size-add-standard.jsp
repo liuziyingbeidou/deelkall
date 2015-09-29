@@ -252,7 +252,7 @@ select{width:152px;}
 					   </tr>
 					    <tr>
 					    <td nowrap align="right" width="11%">尺码:</td>
-					    <td width="27%"><input name='stinfoVO.vsize' id="vcodeid" maxlength="3" type="text" class="text" style="width:154px" value="${stinfoVO.vsize }" /></td>				  
+					    <td width="27%"><input name='stinfoVO.vsize' id="vcodeid" maxlength="5" type="text" class="text" style="width:154px" value="${stinfoVO.vsize }" /></td>				  
 					   </tr>
 					   <tr>
 					  	<td width="100%" colspan="4" align="left" nowrap><hr /></td>
