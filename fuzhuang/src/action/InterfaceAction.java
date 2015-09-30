@@ -683,7 +683,7 @@ public class InterfaceAction extends BaseAction{
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select ");
-		sql.append(" spb.id,spb.vmoduletype,spb.docvarietyid,spb.vcolorOrpatch,spb.vlin ");
+		sql.append(" spb.id,spb.vmoduletype,spb.docvarietyid,spb.vcolorOrpatch,spb.vlin ,spb.vdef2");
 		sql.append(" from fz_tem_proclass_bb pbb");
 		sql.append(" left join ");
 		sql.append(" fz_tem_subpart_b spb");
@@ -727,6 +727,7 @@ public class InterfaceAction extends BaseAction{
 				dto.setDocvarietyid(CommUtil.isNullOrEm(arry[2]) ? null : Integer.valueOf(arry[2].toString()));
 				dto.setVcolorOrpatch(CommUtil.isNullOrEm(arry[3]) ? null : arry[3].toString());
 				dto.setVlin(CommUtil.isNullOrEm(arry[4]) ? null : arry[4].toString());
+				dto.setVdef2(CommUtil.isNullOrEm(arry[5]) ? null : arry[5].toString());
 				list.add(dto);
 			}
 		}
@@ -744,11 +745,19 @@ public class InterfaceAction extends BaseAction{
 				String selLin;
 				//面料选择
 				String selFra;
-				
+				//add by liuzy 20150930线用途
+				String use;
 				if(IConstant.MOD_ACCESSORIES.equals(moduletype)){//辅料
 					doctypeid = subPartBVO.getDocvarietyid();
+					use = subPartBVO.getVdef2();
+					
+					String wh = " vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and docvarietyid="+doctypeid+ " and proclassids like '%"+typeId+"%'";
+					if(!CommUtil.isNull(use)){
+						wh += " and useid ="+use;
+					}
+					
 					//add by liuzy 2015-08-08 添加品类的过滤 typeId 
-					List<AuxiliaryVO> acclist = iHibernateDAO.findAll(AuxiliaryVO.class, " vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and docvarietyid="+doctypeid+ " and proclassids like '%"+typeId+"%'");
+					List<AuxiliaryVO> acclist = iHibernateDAO.findAll(AuxiliaryVO.class, wh);
 					jsonmap.put("mod_accessories", acclist);
 				}else if(IConstant.MOD_SPECIAL.equals(moduletype)){//特殊档案
 					doctypeid = subPartBVO.getDocvarietyid();
