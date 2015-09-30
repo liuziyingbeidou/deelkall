@@ -74,6 +74,21 @@ $(function(){
 			$(".content").hide();
 		}
 	});
+	//辅料切换
+	var vl = $("input[name='subPartVO.iaccessories']:checked").attr("em");
+		if(vl == "线"){//加载
+			$(".ac-use").show();
+		}else{//文本、无
+			$(".ac-use").hide();
+		}
+	$("input[name='subPartVO.iaccessories']").click(function(){
+		var val = $(this).attr("em");
+		if(val == "线"){//加载
+			$(".ac-use").show();
+		}else{//文本、无
+			$(".ac-use").hide();
+		}
+	});
 });
 //清除
 function clear(){
@@ -187,8 +202,14 @@ function changepro(){
 					  	 <td width="14%" align="right" nowrap>辅料:</td>
 					    <td width="86%" colspan="3">
 					    <c:forEach items="${acclist}" var="bean">
-							<input name="subPartVO.iaccessories" type="radio" <c:if test='${subPartVO.iaccessories==bean.id}'>checked</c:if> value="${bean.id }">${bean.vname }
+							<input class="accpart" name="subPartVO.iaccessories" type="radio" <c:if test='${subPartVO.iaccessories==bean.id}'>checked</c:if> em="${bean.vname }" value="${bean.id }">${bean.vname }
 						</c:forEach>
+						&nbsp;&nbsp;用途：<select name="subPartVO.vdef2" class="useid ac-use" id="useid" style="display:none;">
+							<option value="-1" selected="selected">==选择==</option>
+							<c:forEach items="${uselist}" var="bean">
+								<option <c:if test='${subPartVO.vdef2==bean.id}'>selected="selected"</c:if> value="${bean.id}">${bean.vname }</option>
+							</c:forEach>
+						</select>
 					    </td>
 					  </tr>
 					  <tr class="content hr">
