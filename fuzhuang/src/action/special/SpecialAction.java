@@ -74,7 +74,7 @@ public class SpecialAction extends BaseAction {
 		sql.append(" on s.docvarietyid=d.id");
 		sql.append(" where 1=1");
 		if(search_input != null && !"".equals(search_input)){
-			sql.append(" and d.vname like '%"+search_input+"%' or s.vcode ='"+search_input+"' or s.vname like '%"+search_input+"%'");
+			sql.append(" and (d.vname like '%"+search_input+"%' or s.vcode ='"+search_input+"' or s.vname like '%"+search_input+"%')");
 		}
 		if(bisupload != null && !"".equals(bisupload)){
 			if("all".equals(bisupload)){
@@ -82,7 +82,7 @@ public class SpecialAction extends BaseAction {
 			}else if("yes".equals(bisupload)){
 				sql.append(" and s.bisupload = 1");
 			}else if("no".equals(bisupload)){
-				sql.append(" and s.bisupload = 0");
+				sql.append(" and (s.bisupload = 0 or ifnull(s.bisupload,0)=0)");
 			}
 		}
 		

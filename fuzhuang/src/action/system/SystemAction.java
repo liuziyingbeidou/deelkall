@@ -413,7 +413,7 @@ public class SystemAction extends BaseAction {
 		
 		String wh = " 1=1";
 		if(!CommUtil.isNull(search_input)){
-			wh = " vcode ='"+search_input+"' or prodCode='"+search_input+"'";
+			wh = " vcode like '%"+search_input+"%' or prodCode like '%"+search_input+"%'";
 		}
 		Integer total = iHibernateDAO.getCountByHQL(DiyInfoVO.class, wh);
 		List<DiyInfoVO> list = iHibernateDAO.findPage(DiyInfoVO.class, dgpage, rows, wh);

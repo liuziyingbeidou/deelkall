@@ -103,7 +103,7 @@ public class FabricAction extends BaseAction {
 			}else if("yes".equals(bisupload)){
 				sql.append(" and f.bisupload = 1");
 			}else if("no".equals(bisupload)){
-				sql.append(" and f.bisupload = 0");
+				sql.append(" and (f.bisupload = 0 or ifnull(f.bisupload,0)=0)");
 			}
 		}
 		

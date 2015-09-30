@@ -244,7 +244,7 @@ public class CommUtil {
 		    Matcher matcher = pattern.matcher(content);  
 		    while (matcher.find()) {  
 		        return matcher.group(0);  
-		    }  
+		    }
 		    return "";  
 		}  
 		
