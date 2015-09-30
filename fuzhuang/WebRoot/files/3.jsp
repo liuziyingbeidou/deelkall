@@ -9,7 +9,7 @@ response.setStatus(HttpServletResponse.SC_OK);
 <HTML>
 <HEAD>
 <title>十分抱歉，您要查看的网页当前已过期，或已被更名或删除！</title>
-<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<META http-equiv=Content-Type content="text/html;">
 <!--<meta http-equiv="refresh" content="3;URL=/mainfra.html">
 -->
 <STYLE type=text/css>INPUT {
