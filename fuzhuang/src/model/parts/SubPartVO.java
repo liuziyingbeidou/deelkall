@@ -39,7 +39,7 @@ public class SubPartVO extends IdEntity {
 	private String vmemo;
 	//自定义项
 	private String vdef1;//设备已使用
-	private String vdef2;
+	private String vdef2;//辅料-用途已使用
 	private String vdef3;
 	private String vdef4;
 	private String vdef5;

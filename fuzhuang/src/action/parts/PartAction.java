@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.basedoc.BaseDocSoVO;
 import model.basedoc.DocVarietyVO;
 import model.parts.MasterVO;
 import model.parts.SubPartBVO;
@@ -283,6 +284,8 @@ public class PartAction extends BaseAction {
 		}
 		//辅料-品种
 		request.setAttribute("acclist",iMyHibernateDao.selectBeanList(DocVarietyVO.class," where ifnull(dr,0)=0 and vmoduletype='"+IConstant.MOD_ACCESSORIES+"'"));
+		//用途
+		request.setAttribute("uselist",iMyHibernateDao.selectBeanList(BaseDocSoVO.class," where ifnull(dr,0)=0 and vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and vname like '%线%' and vdoctype='"+IConstant.DOC_USE+"'"));
 		//品类
 		request.setAttribute("proclasslist",iMyHibernateDao.selectBeanList(ProclassVO.class," where ifnull(dr,0)=0"));
 		//配饰-品种
@@ -461,6 +464,7 @@ public class PartAction extends BaseAction {
 							subPartBVO.setSubpartid(id);
 							subPartBVO.setVmoduletype(IConstant.MOD_ACCESSORIES);
 							subPartBVO.setDocvarietyid(subPartVO.getIaccessories());
+							subPartBVO.setVdef2(subPartVO.getVdef2());
 							list.add(subPartBVO);
 						}
 					};break;

@@ -43,7 +43,7 @@ public class SubPartBVO extends IdEntity {
 	private String vmemo;
 	//自定义项
 	private String vdef1;
-	private String vdef2;
+	private String vdef2;//辅料线用途
 	private String vdef3;
 	private String vdef4;
 	private String vdef5;
