@@ -98,7 +98,7 @@ public class AccessoriesAction extends BaseAction {
 		sql.append(" and u.vdoctype='"+IConstant.DOC_USE+"'");*/
 		
 		if(search_input != null && !"".equals(search_input)){
-			sql.append(" and t.vname like '%"+search_input.trim()+"%' or f.vcode like '%"+search_input.trim()+"%'");
+			sql.append(" and (t.vname like '%"+search_input.trim()+"%' or f.vcode like '%"+search_input.trim()+"%')");
 		}
 		if(bisupload != null && !"".equals(bisupload)){
 			if("all".equals(bisupload)){
@@ -106,13 +106,13 @@ public class AccessoriesAction extends BaseAction {
 			}else if("yes".equals(bisupload)){
 				sql.append(" and f.bisupload = 1");
 			}else if("no".equals(bisupload)){
-				sql.append(" and f.bisupload = 0");
+				sql.append(" and (f.bisupload = 0 or ifnull(f.bisupload,0)=0)");
 			}
 		}
 		
 		if(bisdefault != null && !"".equals(bisdefault)){
 			if("-1".equals(bisdefault)){
-				sql.append(" and (bisdefault in(1,0) or bisdefault is null)");
+				sql.append(" and (bisdefault in(1,0) or ifnull(bisdefault,0)=0)");
 			}else if("1".equals(bisdefault)){
 				sql.append(" and bisdefault = 1");
 			}

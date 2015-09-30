@@ -160,5 +160,30 @@ public interface IConstant {
 	public static final String BOM_JC_SLEEVELINING = "sleeveLining";
 	//后背用料
 	public static final String BOM_JC_BACKFABRIC = "backFabric";
+	//纽扣
+	public static final String BOM_JC_NIUKOU = "niukou";
+	//拉链
+	public static final String BOM_JC_LALIAN = "lalian";
+	//袋布
+	public static final String BOM_JC_DAIBU = "daibu";
+	
+	/**以下是子部件对应简码**/
+	//顺色编码
+	public static final String PART_CODE_SS = "SS";
+	//撞色
+	public static final String PART_SNAMW_ZS = "zhuangse";
+	//贴布
+	public static final String PART_SNAMW_TB = "tiebu";
+	//特殊锁眼-BOM简称
+	public static final String PART_SNAMW_SY = "suoyan";
+	//珠边--BOM简称
+	public static final String PART_SNAMW_ZB = "zhubian";
+	//扣位数
+	public static final String PART_SNAMW_KWS = "kouweishu";
+	//袖扣数
+	public static final String PART_SNAMW_XKS = "xiukoushu";
+	
+	//耗料配色面料、肘部面料，作业编号为0001；特殊线、珠边线作业编号为0001；
+	public static final String VJOBNUM = "0001";
 	
 }

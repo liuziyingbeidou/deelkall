@@ -323,6 +323,7 @@ public class InterfaceAction extends BaseAction{
 				}
 			 }
 		 }
+		 
 		 return upPrice;
 	}
 	
@@ -1624,8 +1625,8 @@ public class InterfaceAction extends BaseAction{
 	 */
 	@Transactional
 	public void toBuildBom(){
-		String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"23#1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
-		//bomStr = bomStr +"#"+ "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"1\"},\"diyPro\":\"23\",\"diyCode\":\"02\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
+		//String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"23#1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
+		String bomStr = "[{\"diySubCont\":[{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XB\"},{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\"},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\"},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\"},{\"name\":\"撞色部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头/胸袋\",\"appendCode\":\"11141191633\",\"code\":\"02/03\"},\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141191633\",\"code\":\"01\"},\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190420\",\"code\":\"01\"},\"code\":\"SY\"}],\"diyName\":\"西服上衣\",\"diyCode\":\"01\",\"diyFra\":{\"name\":\"毛绒素色蓝\",\"code\":\"11113150006\",\"id\":\"154\",\"specname\":\"1\"},\"diyPro\":\"19\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}]";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
 		
@@ -1635,10 +1636,11 @@ public class InterfaceAction extends BaseAction{
 		StringBuffer ids = new StringBuffer();//bom对应的表主键
 		
 		if(srcBom != null && !"".equals(srcBom)){
-			String[] arrayBom = srcBom.split(IConstant.BOM_3DTZ_SPLIT);
-			int len = arrayBom.length;
+			//String[] arrayBom = srcBom.split(IConstant.BOM_3DTZ_SPLIT);
+			JSONArray arrayBom = JSONArray.fromObject(srcBom);
+			int len = arrayBom.size();
 			for (int i = 0; i < len; i++) {
-				String[] abom = getBomByCon(arrayBom[i]);
+				String[] abom = getBomByCon(arrayBom.getJSONObject(i));
 				newBom.append(abom[1]).append(IConstant.BOM_SPLIT);
 				ids.append(abom[0]).append(IConstant.BOM_3D_SPLIT);
 			}
@@ -1654,17 +1656,27 @@ public class InterfaceAction extends BaseAction{
 	 * @param @param srcBom
 	 * @return void
 	 */
-	public String[] getBomByCon(String srcBom){
+	public String[] getBomByCon(JSONObject srcBom){
 		String[] backStr = new String[2];
 		
 		//BOM JSON对象信息
-		JSONObject  bomJson = JSONObject.fromObject(srcBom);
+		//JSONObject  bomJson = JSONObject.fromObject(srcBom);
+		JSONObject  bomJson = srcBom;
 		Object diyPro = bomJson.get("diyPro");//品类id
 		Object diyCode = bomJson.get("diyCode");//品类编码
 		Object diyName = bomJson.get("diyName");//品类名称
 		Object diyFra = bomJson.get("diyFra");//面料
 		Object diyLin = bomJson.get("diyLin");//里料
 		Object diySubCont = bomJson.get("diySubCont");//子部件
+		
+		/**
+		 * 通过品类获得料件耗料信息
+		 */
+		List<CfeedBVO> list_cf = getCfeedByPro(diyPro+"");
+		/**
+		 * 通过品类获得BOM标配信息
+		 */
+		List<BtcconfigBVO> list_bom = getBOMByPro(diyPro+"");
 		
 		//面料 JSON对象信息--fabric 
 		JSONObject fraJson = JSONObject.fromObject(diyFra);
@@ -1684,39 +1696,35 @@ public class InterfaceAction extends BaseAction{
 		//后背用料 JSON对象
 		JSONObject linBackJson = JSONObject.fromObject(backFabric);
 		
+		/**组织BOM-start**/
 		/**
 		 * 子部件对象
 		 */
-		JSONObject subJson = JSONObject.fromObject(diySubCont);
-		Object subType = subJson.get("selValue");//子部件选择内容项
-		/**
-		 * 子部件内容 JSON对象
-		 */
-		JSONObject subTypeJson = JSONObject.fromObject(subType);
+		JSONArray subJson = JSONArray.fromObject(diySubCont);
+		Integer size = subJson.size();
+		for(int k = 0; k < size; k++){
+			JSONObject objjson = subJson.getJSONObject(k);
+			//①
+			orgAccBom(list_bom,objjson,list_cf);
+		}
 		
 		System.out.println("品类id:"+diyPro);
 		System.out.println("品类编码:"+diyCode);
 		System.out.println("面料:"+diyFra);
 		System.out.println("里料:"+diyLin);
 		System.out.println("子部件:"+diySubCont);
-		/**
-		 * 通过品类获得料件耗料信息
-		 */
-		List<CfeedBVO> list_cf = getCfeedByPro(diyPro+"");
-		/**
-		 * 通过品类获得BOM标配信息
-		 */
-		List<BtcconfigBVO> list_bom = getBOMByPro(diyPro+"");
 		
-		/**组织BOM-start**/
-		//面料
-		orgBom(list_bom,fraJson,IConstant.BOM_JC_FABRIC);
+		//②面料
+		orgBom(list_bom,fraJson,null,IConstant.BOM_JC_FABRIC);
 		//衣里料、里布用料
-		orgBom(list_bom,lininJson,IConstant.BOM_JC_LINING);
+		orgBom(list_bom,lininJson,fraJson,IConstant.BOM_JC_LINING);
 		//袖里料
-		orgBom(list_bom,linSlvJson,IConstant.BOM_JC_SLEEVELINING);
+		orgBom(list_bom,linSlvJson,fraJson,IConstant.BOM_JC_SLEEVELINING);
 		//后背用料 
-		orgBom(list_bom,linSlvJson,IConstant.BOM_JC_BACKFABRIC);
+		orgBom(list_bom,linBackJson,fraJson,IConstant.BOM_JC_BACKFABRIC);
+		
+		//③顺色部分-袋布、拉链
+		orgSSBom(list_bom,fraJson);
 		/**组织BOM-end**/
 		
 		/**
@@ -1760,23 +1768,191 @@ public class InterfaceAction extends BaseAction{
 	}
 	
 	/**
+	 * @Description: 子部件对应撞色、顺色、普通
+	 * @param @param list_bom BOM标配
+	 * @param @param json 
+	 * @param list_cf 耗料表
+	 * @return void
+	 */
+	public void orgAccBom(List<BtcconfigBVO> list_bom,JSONObject json,List<CfeedBVO> list_cf){
+		Object vsname = json.get("vsname");
+		Object vcode = json.get("code");
+		Object vname = json.get("name");
+		Object subType = json.get("selValue");//子部件选择内容项
+		//子部件内容 JSON对象
+		JSONObject subTypeJson = JSONObject.fromObject(subType);
+		//类似撞色面料
+		Object appendCode = subTypeJson.get("subTypeJson");
+		
+		BtcconfigBVO bvo = new BtcconfigBVO();
+		/**撞色、贴布、特殊锁眼、珠边{层级关系}**/
+		if(!CommUtil.isNull(appendCode)){
+			//根据vsname 区别撞色、贴布、特殊锁眼、珠边
+			if(IConstant.PART_SNAMW_ZS.equals(vsname)){
+				//撞色 部位--所有拼色面料耗料
+				Double allM = getMaxValue(subTypeJson,list_cf,vname+"");
+				//组织BOM
+				bvo.setVcode(appendCode+"");
+				bvo.setNunitmny(allM);
+				bvo.setVjobnum(IConstant.VJOBNUM);
+				setBomEm(list_bom,vsname+"",bvo,"n");
+			}else if(IConstant.PART_SNAMW_TB.equals(vsname)){
+				//贴布
+				Double allM = getMaxValue(subTypeJson,list_cf,null);
+				//组织BOM
+				bvo.setVcode(appendCode+"");
+				bvo.setNunitmny(allM);
+				bvo.setVjobnum(IConstant.VJOBNUM);
+				setBomEm(list_bom,vsname+"",bvo,"n");
+			}else if(IConstant.PART_SNAMW_SY.equals(vsname) || IConstant.PART_SNAMW_ZB.equals(vsname)){
+				bvo.setVcode(appendCode+"");
+				setBomEm(list_bom,vsname+"",bvo,"y");
+			}
+		}else{//其他{不包含层级关系}
+			//扣位数
+			if(IConstant.PART_SNAMW_KWS.equals(vsname)){
+				String numb = CommUtil.getNumbers((subTypeJson.get("name")+"").split("[*]")[0]);
+				bvo.setNunitmny(Double.valueOf(numb)+1);
+				setBomEm(list_bom,IConstant.BOM_JC_NIUKOU,bvo,"y");
+			}else if(IConstant.PART_SNAMW_XKS.equals(vsname)){//袖扣数
+				String numb = CommUtil.getNumbers(subTypeJson.get("name")+"");
+				bvo.setNunitmny(Double.valueOf(numb)+1);
+				setBomEm(list_bom,IConstant.BOM_JC_NIUKOU,bvo,"y");
+			}
+			
+		}
+	}
+	
+	/**
+	 * @Description: 最大耗料*耗料数
+	 * @param @param subTypeJson
+	 * @param @param list_cf
+	 * @param @return
+	 * @return Map<String,Double>
+	 */
+	public Double getMaxValue(JSONObject subTypeJson,List<CfeedBVO> list_cf,String name){
+		Double num = new Double("0.0");
+		TreeMap<String,Double> mapHL = new TreeMap<String,Double>();
+		String[] codes = (subTypeJson.get("code")+"").split("/");
+		if(codes != null){
+			num = Double.valueOf(codes.length);
+			for(int i = 0; i < codes.length; i++){
+				String code = codes[i];
+				for (CfeedBVO cfeedBVO : list_cf) {
+					if(code.equals(cfeedBVO.getVcode())){
+						String st = cfeedBVO.getVstate();
+						if(!CommUtil.isNull(st)){
+							if(name.contains(st)){
+								mapHL.put(code, cfeedBVO.getNunitmny());
+							}
+						}else{
+							mapHL.put(code, cfeedBVO.getNunitmny());
+						}
+					}
+				}
+			}
+			//判断在多选撞色部位时，耗料以单个最多的耗料为定额标准
+			Double maxValue = new Double("0.0");
+	        String maxKey = null;
+			if(mapHL != null){
+				Iterator<Entry<String, Double>> it = mapHL.entrySet().iterator();
+				for(int i=0;i<mapHL.size();i++){
+		            Entry<String, Double> entry = it.next();
+		            Double value = entry.getValue();
+		            if(value > maxValue){
+		                maxValue = value;
+		                maxKey = entry.getKey().toString();
+		                num = num * maxValue;
+		            }
+		        }
+			}
+		}
+		return num;
+	}
+	
+	/**
+	 * @Description: 设置顺色到BOM
+	 * @param 
+	 * @return void
+	 */
+	public void orgSSBom(List<BtcconfigBVO> list_bom,JSONObject frajson){
+		if(!CommUtil.isNull(frajson)){
+			BtcconfigBVO vo = new BtcconfigBVO();
+			String code = null;
+			//处理顺色-start
+			if(IConstant.PART_CODE_SS.equals(code)){
+				String fracode = frajson.getString("code");//面料编码
+				//拉链
+				code = getSSCode(fracode,IConstant.BOM_JC_LALIAN);
+				vo.setVcode(code);
+				setBomEm(list_bom,IConstant.BOM_JC_LALIAN,vo,"y");
+				//袋布
+				code = getSSCode(fracode,IConstant.BOM_JC_DAIBU);
+				vo.setVcode(code);
+				setBomEm(list_bom,IConstant.BOM_JC_DAIBU,vo,"y");
+			}
+			//处理顺色-end
+		}
+	}
+	
+	/**
 	 * @Description: 设置耗料到BOM
 	 * @param 
 	 * @return void
 	 */
-	public void orgBom(List<BtcconfigBVO> list_bom,JSONObject json,String vsn){
+	public void orgBom(List<BtcconfigBVO> list_bom,JSONObject json,JSONObject frajson,String vsn){
 		if(!CommUtil.isNull(json)){
 			BtcconfigBVO vo = new BtcconfigBVO();
-			vo.setVcode(json.getString("code"));
+			String code = json.getString("code");
 			String spec = json.getString("specname");
+			//处理顺色-start
+			if(IConstant.PART_CODE_SS.equals(code)){
+				String fracode = frajson.getString("code");//面料编码
+				code = getSSCode(fracode,vsn);
+				if(CommUtil.isNull(code)){
+					String specsql = "select specname from fz_auxiliary where vmoduletype='"+IConstant.MOD_LINING+"' and vcode='"+code+"'";
+					spec = getStrBySQL(specsql) + "";
+				}
+			}
+			vo.setVcode(code);
+			//处理顺色-end
 			if(!CommUtil.isNull(spec)){
 				String[] aspec = spec.split(IConstant.SPEC_3D_SPLIT);
 				if(aspec.length == 2){
 					vo.setVspec(CommUtil.getNumbers(aspec[1]));
-					setBomEm(list_bom,vsn,vo);
+					setBomEm(list_bom,vsn,vo,null);
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @Description: 根据面料获取顺色数据
+	 * @param @param fracode
+	 * @param @param vsn
+	 * @param @return
+	 * @return String
+	 */
+	public String getSSCode(String fracode,String vsn){
+		String sscode = null;
+		//里料
+		if(IConstant.BOM_JC_LINING.equals(vsn)){
+			String sql = "select b.icisLining from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			sscode = getStrBySQL(sql)+"";
+		}else if(IConstant.BOM_JC_SLEEVELINING.equals(vsn)){
+			String sql = "select b.icisXLining from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			sscode = getStrBySQL(sql)+"";
+		}else if(IConstant.BOM_JC_BACKFABRIC.equals(vsn)){
+			String sql = "select b.icisHBLining from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			sscode = getStrBySQL(sql)+"";
+		}else if(IConstant.BOM_JC_LALIAN.equals(vsn)){//拉链
+			String sql = "select b.iciszipper from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			sscode = getStrBySQL(sql)+"";
+		}else if(IConstant.BOM_JC_DAIBU.equals(vsn)){//袋布
+			String sql = "select b.icisBagging from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			sscode = getStrBySQL(sql)+"";
+		}
+		return sscode;
 	}
 	
 	/**
@@ -1784,22 +1960,53 @@ public class InterfaceAction extends BaseAction{
 	 * @param 
 	 * @return void
 	 */
-	public void setBomEm(List<BtcconfigBVO> list_bom,String vsn,BtcconfigBVO btvo){
+	public void setBomEm(List<BtcconfigBVO> list_bom,String vsn,BtcconfigBVO btvo,String fg){
 		if(list_bom != null){
 			for (BtcconfigBVO btcconfigBVO : list_bom) {
 				String vsname = btcconfigBVO.getVsname();
-				if(vsn.equals(vsname)){
+				if(vsn.equals(vsname) && fg == null){//本有面料、里料
 					btcconfigBVO.setVcode(btvo.getVcode());
 					//单耗（原幅宽*耗料/现幅宽）
-					String vspec = btcconfigBVO.getVspec();
-					Double dh = btcconfigBVO.getNunitmny();
+					String vspec = btcconfigBVO.getVspec();//原幅宽
+					Double dh = btcconfigBVO.getNunitmny();//耗料
 					Double dspec = Double.valueOf(vspec);
-					btcconfigBVO.setNunitmny(dh * dspec);
+					Double nspec = Double.valueOf(btvo.getVspec());//现幅宽
+					btcconfigBVO.setNunitmny((dh * dspec)/nspec);
 					//规格
 					btcconfigBVO.setVspec(btvo.getVspec());
+				}else if(!isContains(list_bom,vsn) && fg == null){//本无面料、里料
+					btcconfigBVO.setVcode(btvo.getVcode());
+					Double nspec = Double.valueOf(btvo.getVspec());
+					btcconfigBVO.setNunitmny(nspec);
+					//规格
+					btcconfigBVO.setVspec(btvo.getVspec());
+				}else if("n".equals(fg)){//撞色、贴布
+					btcconfigBVO.setVcode(btvo.getVcode());
+					Double nspec = Double.valueOf(btvo.getVspec());
+					btcconfigBVO.setNunitmny(nspec);
+					//规格
+					btcconfigBVO.setVspec(btvo.getVspec());
+				}else if("y".equals(fg)){//特殊锁眼、珠边
+					btcconfigBVO.setVcode(btvo.getVcode());
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @Description: 标准BOM是否含有此料件
+	 * @param @return
+	 * @return boolean
+	 */
+	public boolean isContains(List<BtcconfigBVO> list_bom,String vsn){
+		boolean flag = false;
+		for (BtcconfigBVO btcconfigBVO : list_bom) {
+			String vsname = btcconfigBVO.getVsname();
+			if(vsn.equals(vsname)){
+				flag = true;
+			}
+		}
+		return flag;
 	}
 
 	/**
@@ -1836,7 +2043,7 @@ public class InterfaceAction extends BaseAction{
 	public String getMaxProCode(String ymd){
 		String maxcode = "000000";
 		String sql = "select max(substring(vcode,14)) from fz_diyInfo where substring(vcode,7,6) ='"+ymd+"'";
-		Object max = getMaxBySQL(sql); 
+		Object max = getStrBySQL(sql); 
 		
 		if(max != null){
 			maxcode = max.toString();
@@ -2075,7 +2282,7 @@ public class InterfaceAction extends BaseAction{
 	 * @param sql
 	 * @return
 	 */
-	public Object getMaxBySQL(String sql){
+	public Object getStrBySQL(String sql){
 		return iHibernateDAO.getFirstBySQL("select * from ("+sql+") tb", null);
 	}
 	
