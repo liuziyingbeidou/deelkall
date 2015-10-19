@@ -2,6 +2,7 @@ package action;
 
 import itf.pub.IConstant;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ import model.special.SpecialVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.logging.Log;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,7 +112,7 @@ public class InterfaceAction extends BaseAction{
 		
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append(" f.id,f.vcode,p.vname as patternName,i.vname as ingredientName,c.vname as colourName,f.bisupload,f.ambient,f.specular,f.vrank,f.vfileupload,f.specname,f.vname,f.dpurchasemny");
+		sql.append(" f.id,f.vcode,p.vname as patternName,i.vname as ingredientName,c.vname as colourName,f.bisupload,f.ambient,f.specular,f.vrank,f.vfileupload,f.specname,f.vname,f.dpurchasemny,f.iautype");
 		sql.append(" from fz_auxiliary f");
 		sql.append(" left join fz_base_doc p ");
 		sql.append(" on f.patternid = p.id");
@@ -155,13 +157,24 @@ public class InterfaceAction extends BaseAction{
 				dto.setVname(CommUtil.isNullOrEm(arry[11]) ? null : arry[11].toString());
 				//f.dpurchasemny
 				dto.setDpurchasemny(CommUtil.isNullOrEm(arry[12]) ? 0.00 : Double.valueOf(arry[12].toString()));
+				//liuzy-151015面料细分类
+				dto.setIautype(CommUtil.isNullOrEm(arry[13]) ? null : Integer.valueOf(arry[13].toString()));
+				if("1".equals(arry[13]+"")){
+					dto.setVdef3("梭织面料");
+				}else if("2".equals(arry[13]+"")){
+					dto.setVdef3("针织面料");
+				}else if("3".equals(arry[13]+"")){
+					dto.setVdef3("毛皮类");
+				}else if("4".equals(arry[13]+"")){
+					dto.setVdef3("皮革类");
+				}
 				
 				list.add(dto);
 			}
 		}
 		
 		String[] excludes = new String[]{"class","condmap","selected","userValue","ts","dr","vdef1","vdef2",
-				"vdef3","vdef4","vdef5","icisBagging","icisButton","icisComponent","icisLine","icisLining","specid","subpartids","useid","usename","vcisBaggingName","vcisButtonName","vcisLiningName","vfrom","vmemo","vmoduletype","daccountmny"};
+				"vdef4","vdef5","icisBagging","icisButton","icisComponent","icisLine","icisLining","specid","subpartids","useid","usename","vcisBaggingName","vcisButtonName","vcisLiningName","vfrom","vmemo","vmoduletype","daccountmny"};
 		renderJson(list,JsonUtils.configJson(excludes));
 	}
 
@@ -1636,6 +1649,7 @@ public class InterfaceAction extends BaseAction{
 	public void toBuildBom(){
 		//String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"23#1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
 		String bomStr = "[{\"diySubCont\":[{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XB\"},{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\"},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\"},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\"},{\"name\":\"撞色部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头/胸袋\",\"appendCode\":\"11141191633\",\"code\":\"02/03\"},\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141191633\",\"code\":\"01\"},\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190420\",\"code\":\"01\"},\"code\":\"SY\"}],\"diyName\":\"西服上衣\",\"diyCode\":\"01\",\"diyFra\":{\"name\":\"毛绒素色蓝\",\"code\":\"11113150006\",\"id\":\"154\",\"specname\":\"1\"},\"diyPro\":\"19\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}]";
+		//String bomStr = "[{\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}},\"diyCode\":\"01\",\"diyPro\":\"19\",\"diySubCont\":[{\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\"},{\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\"},{\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\"},{\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\"}],\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11111350014\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"}}]";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
 		
@@ -2156,8 +2170,37 @@ public class InterfaceAction extends BaseAction{
 	 * @return void 
 	 */
 	public void saveDiyInfo(){
+		System.out.println("-------------------定制信息保存开始--------------------");
 		HttpServletRequest request = ServletActionContext.getRequest();
+		
+		String allInfo = request.getParameter("diyBom");
+		
+		JSONObject diyInfo = JSONObject.fromObject(allInfo);
 		//id
+		String diyCode = diyInfo.getString("diyCode");
+		//产品编码
+		String prodCode = diyInfo.getString("prodCode");
+		//产品名称
+		String prodName = diyInfo.getString("prodName");
+		//定制信息code+名称
+		String diyBom = diyInfo.getString("diyBom");
+		//定制信息中文说明
+		String diyBomDesc = diyInfo.getString("diyBomDesc");
+		//3D图片路径
+		String diyImgUrl = diyInfo.getString("diyImgUrl");
+		//产品类型
+		String diyType = diyInfo.getString("diyType");
+		//产品尺码信息
+		String diySize = diyInfo.getString("diySize");
+		//产品工艺编码
+		String diyCraft = diyInfo.getString("diyCraft");
+		//商品单价
+		String prodPrice = diyInfo.getString("prodPrice");
+		//版型
+		String formatType = diyInfo.getString("formatType");
+		//BOM
+		String vbom = diyInfo.getString("vbom");
+		/*//id
 		String diyCode = request.getParameter("diyCode");
 		//产品编码
 		String prodCode = request.getParameter("prodCode");
@@ -2180,7 +2223,7 @@ public class InterfaceAction extends BaseAction{
 		//版型
 		String formatType = request.getParameter("formatType");
 		//BOM
-		String vbom = request.getParameter("vbom");
+		String vbom = request.getParameter("vbom");*/
 		
 		if(!CommUtil.isNull(diyCode)){
 			String[] adiyCode = diyCode.split(IConstant.BOM_3D_SPLIT);
@@ -2228,40 +2271,48 @@ public class InterfaceAction extends BaseAction{
 			}
 			for(int i = 0; i < len; i++){
 				DiyInfoVO diyInfoVO = iHibernateDAO.findFirst(DiyInfoVO.class, " id="+adiyCode[i]);
-				if(CommUtil.isNull(map.get("aprodCode"))){
+				if(!CommUtil.isNull(map.get("aprodCode"))){
 					diyInfoVO.setProdCode(prodCode);
 				}
-				if(CommUtil.isNull(map.get("aprodName"))){
+				if(!CommUtil.isNull(map.get("aprodName"))){
 					diyInfoVO.setProdName(prodName);
 				}
-				if(CommUtil.isNull(map.get("adiyBom"))){
+				if(!CommUtil.isNull(map.get("adiyBom"))){
 					diyInfoVO.setDiyBom(diyBom);
 				}
-				if(CommUtil.isNull(map.get("adiyBomDesc"))){
+				if(!CommUtil.isNull(map.get("adiyBomDesc"))){
 					diyInfoVO.setDiyBomDesc(diyBomDesc);
 				}
-				if(CommUtil.isNull(map.get("adiyImgUrl"))){
+				if(!CommUtil.isNull(map.get("adiyImgUrl"))){
 					diyInfoVO.setDiyImgUrl(diyImgUrl);
 				}
-				if(CommUtil.isNull(map.get("adiyType"))){
+				if(!CommUtil.isNull(map.get("adiyType"))){
 					diyInfoVO.setDiyType(diyType);
 				}
-				if(CommUtil.isNull(map.get("adiySize"))){
+				if(!CommUtil.isNull(map.get("adiySize"))){
 					diyInfoVO.setDiySize(diySize);
 				}
-				if(CommUtil.isNull(map.get("adiyCraft"))){
+				if(!CommUtil.isNull(map.get("adiyCraft"))){
 					diyInfoVO.setDiyCraft(diyCraft);
 				}
-				if(CommUtil.isNull(map.get("aprodPrice"))){
+				if(!CommUtil.isNull(map.get("aprodPrice"))){
 					diyInfoVO.setProdPrice(prodPrice);
 				}
-				if(CommUtil.isNull(map.get("aformatType"))){
+				if(!CommUtil.isNull(map.get("aformatType"))){
 					diyInfoVO.setFormatType(formatType);
 				}
-				if(CommUtil.isNull(map.get("avbom"))){
+				if(!CommUtil.isNull(map.get("avbom"))){
 					diyInfoVO.setVbom(vbom);
 				}
-				iHibernateDAO.update(diyInfoVO);
+				try {
+					iHibernateDAO.delete(DiyInfoVO.class, Integer.valueOf(adiyCode[i]));
+					diyInfoVO.setTs(new Timestamp(System.currentTimeMillis()));
+					iHibernateDAO.save(diyInfoVO);
+					System.out.println("-------------------定制信息保存结束--------------------");
+					renderText("定制信息保存成功!");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
