@@ -112,7 +112,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<legend>定制信息中文说明</legend>
 				<!--<input class="easyui-textbox" data-options="multiline:true" value="${diyInfoVO.diyBomDesc }" style="width:100%;height:50px">-->
 				<!--<span><pre>${diyInfoVO.diyBomDesc }</pre></span>-->
-				<textarea readonly="readonly" rows="10%" cols="200">${diyInfoVO.diyImgUrl }</textarea>
+				<textarea readonly="readonly" rows="10%" cols="200">${diyInfoVO.diyBomDesc }</textarea>
 				</fieldset>
 			</TD>
 		</TR>
