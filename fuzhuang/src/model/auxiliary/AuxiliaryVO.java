@@ -80,7 +80,7 @@ public class AuxiliaryVO extends IdEntity {
 	//自定义项
 	private String vdef1;//是否有图使用
 	private String vdef2;//数据流向使用
-	private String vdef3;
+	private String vdef3;//接口传输使用-面料细分类
 	private String vdef4;
 	private String vdef5;
 	//是否默认数据
