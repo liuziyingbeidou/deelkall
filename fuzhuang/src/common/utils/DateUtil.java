@@ -20,7 +20,8 @@ public class DateUtil
 {      
 	public static void main(String[] args){
 		
-		System.out.println(getCurDate("yyyyMMdd").substring(2));
+		System.out.println( new Timestamp(System.currentTimeMillis()));
+		
 	}
 	
     //默认显示日期的格式      
