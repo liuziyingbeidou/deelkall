@@ -2,6 +2,7 @@ package action;
 
 import itf.pub.IConstant;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ import model.special.SpecialVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.logging.Log;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,10 +50,9 @@ import dao.IHibernateDAO;
 import dao.IMyHibernateDao;
 
 
-public class InterfaceAction extends BaseAction{
+public class InterfaceAction extends BaseAction implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 2898642732111884884L;
 	private IHibernateDAO iHibernateDAO;
 	private IMyHibernateDao iMyHibernateDao;
 	private String url = "./";	
@@ -1648,12 +1647,12 @@ public class InterfaceAction extends BaseAction{
 	@Transactional
 	public void toBuildBom(){
 		//String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"23#1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
-		String bomStr = "[{\"diySubCont\":[{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XB\"},{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\"},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\"},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\"},{\"name\":\"撞色部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头/胸袋\",\"appendCode\":\"11141191633\",\"code\":\"02/03\"},\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141191633\",\"code\":\"01\"},\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190420\",\"code\":\"01\"},\"code\":\"SY\"}],\"diyName\":\"西服上衣\",\"diyCode\":\"01\",\"diyFra\":{\"name\":\"毛绒素色蓝\",\"code\":\"11113150006\",\"id\":\"154\",\"specname\":\"1\"},\"diyPro\":\"19\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}]";
+		//String bomStr = "[{\"diySubCont\":[{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XB\"},{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\"},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\"},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\"},{\"name\":\"撞色部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头/胸袋\",\"appendCode\":\"11141191633\",\"code\":\"02/03\"},\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141191633\",\"code\":\"01\"},\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190420\",\"code\":\"01\"},\"code\":\"SY\"}],\"diyName\":\"西服上衣\",\"diyCode\":\"01\",\"diyFra\":{\"name\":\"毛绒素色蓝\",\"code\":\"11113150006\",\"id\":\"154\",\"specname\":\"1\"},\"diyPro\":\"19\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}]";
 		//String bomStr = "[{\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}},\"diyCode\":\"01\",\"diyPro\":\"19\",\"diySubCont\":[{\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\"},{\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\"},{\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\"},{\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\"}],\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11111350014\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"}}]";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
 		
-		String srcBom = bomStr;
+		String srcBom = bomInfo;
 		String backInfo = null;//盛放返回信息
 		StringBuffer newBom = new StringBuffer();//组织好BOM
 		StringBuffer ids = new StringBuffer();//bom对应的表主键
@@ -1664,11 +1663,18 @@ public class InterfaceAction extends BaseAction{
 			int len = arrayBom.size();
 			for (int i = 0; i < len; i++) {
 				String[] abom = getBomByCon(arrayBom.getJSONObject(i));
-				newBom.append(abom[1]).append(IConstant.BOM_SPLIT);
-				ids.append(abom[0]).append(IConstant.BOM_3D_SPLIT);
+				newBom.append(CommUtil.isNull(abom[1]) ? "" : abom[1]).append(IConstant.BOM_SPLIT);
+				ids.append(CommUtil.isNull(abom[0]) ? "" : abom[0]).append(IConstant.BOM_3D_SPLIT);
 			}
 			backInfo = (CommUtil.isNull(ids) ? "生成定制单表失败" : ids.toString().substring(0, ids.toString().length()-1))+IConstant.BOM_IDS_3D_SPLIT+ (CommUtil.isNull(newBom) ? "BOM信息生成失败" : newBom.toString().substring(0, newBom.toString().length()-3));
-			renderJson(backInfo);
+			
+			if(!CommUtil.isNull(ids)){
+				String[] adiyCode = (ids+"").split(IConstant.BOM_3D_SPLIT);
+				for(int j = 0; j < adiyCode.length; j++){
+					iHibernateDAO.delete(DiyInfoVO.class, Integer.valueOf(adiyCode[j]));
+				}
+			}
+			renderJson(CommUtil.isNull(backInfo) ? "" : backInfo);
 		}else{
 			renderText("基础数据为空!");
 		}
