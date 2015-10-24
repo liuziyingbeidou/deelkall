@@ -119,7 +119,7 @@ public class FabricAction extends BaseAction {
 			}else if("yes".equals(isClient)){
 				sql.append(" and f.isClient = 1");
 			}else if("no".equals(isClient)){
-				sql.append(" and f.isClient = 0");
+				sql.append(" and (f.isClient = 0 or ifnull(f.isClient,0)=0)");
 			}
 		}
 		
