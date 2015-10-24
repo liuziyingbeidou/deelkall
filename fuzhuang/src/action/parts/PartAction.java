@@ -172,7 +172,9 @@ public class PartAction extends BaseAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		// ‰»Î≤È—Ø
 		String search_input = request.getParameter("searchinput");
-		
+		String bisgyxj = request.getParameter("bisgyxj");
+		String deviceType = request.getParameter("deviceType");
+		String bisbom = request.getParameter("bisbom");
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select ");
@@ -184,6 +186,32 @@ public class PartAction extends BaseAction {
 		
 		if(search_input != null && !"".equals(search_input)){
 			sql.append(" and s.vname like '%"+search_input+"%' or p.vname like '%"+search_input+"%'");
+		}
+		
+		if(bisgyxj != null && !"".equals(bisgyxj)){
+			if("all".equals(bisgyxj)){
+				sql.append(" and (s.bisgyxj in(1,0) or ifnull(s.bisgyxj,0)=0)");
+			}else if("yes".equals(bisgyxj)){
+				sql.append(" and s.bisgyxj = 1");
+			}else if("no".equals(bisgyxj)){
+				sql.append(" and (s.bisgyxj = 0 or ifnull(s.bisgyxj,0)=0)");
+			}
+		}
+		
+		if(deviceType != null && !"".equals(deviceType)){
+			if("yes".equals(deviceType)){
+				sql.append(" and s.deviceType in(1)");
+			}
+		}
+		
+		if(bisbom != null && !"".equals(bisbom)){
+			if("all".equals(bisbom)){
+				sql.append(" and (s.bisbom in(1,0) or ifnull(s.bisbom,0)=0)");
+			}else if("yes".equals(bisbom)){
+				sql.append(" and s.bisbom = 1");
+			}else if("no".equals(bisbom)){
+				sql.append(" and (s.bisbom = 0 or ifnull(s.bisbom,0)=0)");
+			}
 		}
 		
 		//sql.append(" order by p.vname desc");
