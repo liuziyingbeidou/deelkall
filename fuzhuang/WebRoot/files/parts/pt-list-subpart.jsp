@@ -84,10 +84,29 @@ $(function(){
 		 };
 	})();
 
+
+	$(".deviceType").click(function(){
+	   gridload('pttg');
+	});
+	
+	$(".bisgyxj").click(function(){
+	   gridload('pttg');
+	});
+	
+	$(".bisbom").click(function(){
+	   gridload('pttg');
+	});
+
 	function gridload(emid){
 		var searchinput = $("input[name='search_cont']").val().trim();
+		var bisgyxj = $("input[name='bisgyxj']:checked").val();
+		var deviceType = $("input[name='deviceType']:checked").val();
+		var bisbom = $("input[name='bisbom']:checked").val();
 		$('#'+emid).datagrid('load',{
-			searchinput:searchinput
+			searchinput:searchinput,
+			bisgyxj:bisgyxj,
+			bisbom:bisbom,
+			deviceType:deviceType
 		});
 	}
 
@@ -208,6 +227,20 @@ function del(id){
                 	<span>
                 	&nbsp;&nbsp;
                 	<input id="search_input" placeholder="品类/名称" name="search_cont" type="text">
+                	&nbsp;&nbsp;
+                	<span style="vertical-align: center">
+		           	手机端：  <input type="radio" class="deviceType" name="deviceType" value="all" checked />全部
+		                	<input type="radio" class="deviceType" name="deviceType" value="yes" />是
+		            &nbsp;&nbsp;
+		           	是否细节工艺：  <input type="radio" class="bisgyxj" name=bisgyxj value="all" checked />全部
+		                	<input type="radio" class="bisgyxj" name="bisgyxj" value="yes" />是
+		                	<input type="radio" class="bisgyxj" name="bisgyxj" value="no" />否
+		             &nbsp;&nbsp;
+		           	 是否BOM信息：<input type="radio" class="bisbom" name="bisbom" value="all" checked />全部
+		                	<input type="radio" class="bisbom" name="bisbom" value="yes" />是
+		                	<input type="radio" class="bisbom" name="bisbom" value="no" />否
+		           &nbsp;&nbsp;
+                	</span>
                 	</span>
                 	<span style="float: right;"><a onclick="javascript:add()" class="menu-btn">【新增】</a>&nbsp;&nbsp;</span>
                 	</div>
