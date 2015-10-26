@@ -10,6 +10,8 @@ package itf.pub;
  */
 public interface IConstant {
 
+	public static final String SYSTEMTYPE = "M";
+	
 	/**总分类**/
 	//男装
 	public static final String MENSWEAR = "menswear";

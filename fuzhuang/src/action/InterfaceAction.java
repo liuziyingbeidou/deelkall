@@ -2099,10 +2099,12 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	public String getProCode(String proTypeCode){
 		StringBuffer code = new StringBuffer("3041");
 		if(proTypeCode != null && !"".equals(proTypeCode)){
-			code.append(proTypeCode);
+			code.append(CommUtil.getNumbers(proTypeCode));
 		}else{
 			code.append("00");
 		}
+		//量身定制
+		code.append(IConstant.SYSTEMTYPE);
 		//年月日
 		String ymd = DateUtil.getCurDate("yyyyMMdd").substring(2);
 		String num = ((Integer.valueOf("1"+getMaxProCode(ymd))+1)+"").substring(1);
@@ -2123,7 +2125,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 */
 	public String getMaxProCode(String ymd){
 		String maxcode = "000000";
-		String sql = "select max(substring(vcode,14)) from fz_diyInfo where substring(vcode,7,6) ='"+ymd+"'";
+		String sql = "select max(substring(vcode,15)) from fz_diyInfo where substring(vcode,8,6) ='"+ymd+"'";
 		Object max = getStrBySQL(sql); 
 		
 		if(max != null){
@@ -2234,6 +2236,8 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		
 		String allInfo = request.getParameter("diyBom");
 		
+	//	allInfo = "{\"diyType\":\"2;;;3\",\"diyCode\":\"354#355\",\"diyCraft\":\"GL(内里型-01全内里)-BD(内里笔袋-02圆);;;-BX(版型-1常规版型)\",\"diyCount\":2,\"prodPrice\":\"4360;;;1960\",\"diyBom\":\"版型:1-常规版型 领驳:13-平驳头窄 下摆:2-圆角 扣位数:12-单排两扣(1*2) 后片:0-无开衩 袖衩:0-无袖叉 胸袋:5-船形 下袋:2-平口袋带袋盖 票袋:00-无票袋 内里型:01-全内里 内里挂面:1-直 内里笔袋:02-圆 衣里料:SS-顺色/标配 袖里料:SS-顺色/标配 袖扣工艺:01-叠扣 袖扣数:04-4粒 纽扣号:1301310336-尿素扣黑 绣字位置: 绣字线号: 绣字字体: 绣字内容: 撞色部位: 贴布部位: 特殊锁眼: 珠边工艺: 绣图部位: 绣图图案: 领带: 衬衣: ;;;版型:1-常规版型 前片:10-前无褶 腰头:1-宝剑头 腰里:3-普通腰里 后片:11-后单省 前口袋:10-斜插无牙条 后口袋:1-单开线 脚口:01-内折边（常规） 珠边工艺:00-无珠边 纽扣号:1301350918-尿素扣蓝 绣字位置: 绣字线号: 绣字字体: 绣字内容: \",\"formatType\":\"5;;;5\",\"diyBomDesc\":\"面料--品种:二件套 数量:1\\n名称:毛绒条灰 花型:条\\n成份:毛绒 色系:灰\\n编码:11113330001 品级:A\\n单价:4360 总价:5960\\n西服上衣--版型:常规版型 领驳:平驳头窄\\n下摆:圆角 扣位数:单排两扣(1*2)\\n后片:无开衩 袖衩:无袖叉\\n胸袋:船形 下袋:平口袋带袋盖\\n票袋:无票袋 内里型:全内里\\n内里挂面:直 内里笔袋:圆\\n衣里料:顺色/标配 袖里料:顺色/标配\\n袖扣工艺:叠扣 袖扣数:4粒\\n纽扣号:尿素扣黑 绣字位置:\\n绣字线号: 绣字字体:\\n绣字内容: 撞色部位:\\n贴布部位: 特殊锁眼:\\n珠边工艺: 绣图部位:\\n绣图图案: 领带:\\n衬衣: \\n面料--品种:二件套 数量:1\\n名称:毛绒条灰 花型:条\\n成份:毛绒 色系:灰\\n编码:11113330001 品级:A\\n单价:1960 总价:5960\\n;;;西裤--版型:常规版型 前片:前无褶\\n腰头:宝剑头 腰里:普通腰里\\n后片:后单省 前口袋:斜插无牙条\\n后口袋:单开线 脚口:内折边（常规）\\n珠边工艺:无珠边 纽扣号:尿素扣蓝\\n绣字位置: 绣字线号:\\n绣字字体: 绣字内容:\\n\",\"prodCode\":\"151011212131005201;;;151101101011111101\",\"diySize\":\"TT010:43;TT016:45;JJB:45;TT017:42;JJW:43;TT011:34;TT012:34;TT015:34;TT018:34;TT007:54;TT014:45;TT013:56;TT006:4;TT008:43;TT009:43;TT019:43;SHAPTP:A;SHAPDS:;DRESTP:b;DRESDS:;BUTNHB:e;BUTNDS:;JLG:1;JQK:1;JTD:2;JLB:1;JTX:2;JLJ:2;JXL1:2;FBRTP1:1;JSG:162;CUSTGD:M;MMSPAL:1\\n领围:43 前胸宽:45 胸围:45 肚围:42 腰围:43 臀围:34 总肩宽:34 袖长:34 后背宽:34 后中长:54 手臂围:45 手腕围:56 前衣长:4 前腰节长:43 后腰节长:43 肩斜:43 基本体型:体一般体型 基本体型说明: 穿着习惯:合体 穿着习惯说明: 纽扣习惯:扣一粒 纽扣习惯说明: 领高:轻 前胸领子发空:轻 凸肚:中 直背:轻 挺胸体:中 溜肩:中 袖笼变浅:中 身高:162 \\n3\\n01;;;TT007:43;TT008:34;TT006:34;TT009:23;TT018:12;TT016:34;TT019:34;TT020:43;SHAPTP:A;SHAPDS:;DRESTP:b;DRESDS:;BUTNHB:e;BUTNDS:;TXT:2;PTP:2;FBRTP1:1;TSG:162;CUSTGD:M;MMSPAL:1\\n腰围:43 臀围:34 裤长:34 大腿根围:23 腿肚围:12 通裆:34 前裤腰距腰节距离:34 后裤腰距腰节距离:43 基本体型:体一般体型 基本体型说明: 穿着习惯:合体 穿着习惯说明: 纽扣习惯:扣一粒 纽扣习惯说明: X型腿:中 平臀:中 身高:162 \\n3\\n10\",\"prodName\":\"西服上衣;;;西裤\",\"vbom\":\"[{\\\"tc_aah01\\\":\\\"304101151026-000009\\\",\\\"tc_aah02\\\":\\\"西服上衣\\\",\\\"tc_aah03\\\":\\\"\\\",\\\"tc_aah04\\\":\\\"T001\\\",\\\"tc_aah05\\\":\\\"11113330001\\\",\\\"tc_aah06\\\":\\\"1\\\",\\\"tc_aah07\\\":\\\"148.0\\\",\\\"tc_aah08\\\":\\\"1\\\",\\\"tc_aah09\\\":\\\"0001\\\"}];;;[{\\\"tc_aah01\\\":\\\"304110151026-000010\\\",\\\"tc_aah02\\\":\\\"西裤\\\",\\\"tc_aah03\\\":\\\"\\\",\\\"tc_aah04\\\":\\\"X009\\\",\\\"tc_aah05\\\":\\\"11113330001\\\",\\\"tc_aah06\\\":\\\"1\\\",\\\"tc_aah07\\\":\\\"148.0\\\",\\\"tc_aah08\\\":\\\"1\\\",\\\"tc_aah09\\\":\\\"0001\\\"}]\",\"diyImgUrl\":\"http://3d.deelkall.com/Clothes/userClothes/201510261412163392580_fron_01.jpg|http://3d.deelkall.com/Clothes/userClothes/201510261412177001008_left_01.jpg|http://3d.deelkall.com/Clothes/userClothes/201510261412199780675_back_01.jpg;;;http://3d.deelkall.com/Clothes/userClothes/201510261412203032670_fron_10.jpg|http://3d.deelkall.com/Clothes/userClothes/201510261412211518798_left_10.jpg|http://3d.deelkall.com/Clothes/userClothes/201510261412228331469_back_10.jpg\"}";
+		
 		JSONObject diyInfo = JSONObject.fromObject(allInfo);
 		//id
 		String diyCode = diyInfo.getString("diyCode");
@@ -2317,7 +2321,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				map.put("adiySize", adiySize);
 			}
 			if(!CommUtil.isNull(diyCraft)){
-				String[] adiyCraft = diyCraft.split("#");
+				String[] adiyCraft = diyCraft.split(IConstant.BOM_SPLIT);
 				map.put("adiyCraft", adiyCraft);
 			}
 			if(!CommUtil.isNull(prodPrice)){
@@ -2332,50 +2336,56 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				String[] avbom = vbom.split(IConstant.BOM_SPLIT);
 				map.put("avbom", avbom);
 			}
-			for(int i = 0; i < len; i++){
-				DiyInfoVO diyInfoVO = new DiyInfoVO();//iHibernateDAO.findFirst(DiyInfoVO.class, " id="+adiyCode[i]);
-				if(!CommUtil.isNull(map.get("aprodCode"))){
-					diyInfoVO.setProdCode(map.get("aprodCode")[i]);
+			try {
+				for(int i = 0; i < len; i++){
+					DiyInfoVO diyInfoVO = new DiyInfoVO();//iHibernateDAO.findFirst(DiyInfoVO.class, " id="+adiyCode[i]);
+					if(!CommUtil.isNull(map.get("aprodCode"))){
+						diyInfoVO.setProdCode(map.get("aprodCode")[i]);
+					}
+					if(!CommUtil.isNull(map.get("aprodName"))){
+						diyInfoVO.setProdName(map.get("aprodName")[i]);
+					}
+					if(!CommUtil.isNull(map.get("adiyBom"))){
+						diyInfoVO.setDiyBom(map.get("adiyBom")[i]);
+					}
+					if(!CommUtil.isNull(map.get("adiyBomDesc"))){
+						diyInfoVO.setDiyBomDesc(map.get("adiyBomDesc")[i]);
+					}
+					if(!CommUtil.isNull(map.get("adiyImgUrl"))){
+						diyInfoVO.setDiyImgUrl(map.get("adiyImgUrl")[i]);
+					}
+					if(!CommUtil.isNull(map.get("adiyType"))){
+						diyInfoVO.setDiyType(map.get("adiyType")[i]);
+					}
+					if(!CommUtil.isNull(map.get("adiySize"))){
+						diyInfoVO.setDiySize(map.get("adiySize")[i]);
+					}
+					if(!CommUtil.isNull(map.get("adiyCraft"))){
+						diyInfoVO.setDiyCraft(map.get("adiyCraft")[i]);
+					}
+					if(!CommUtil.isNull(map.get("aprodPrice"))){
+						diyInfoVO.setProdPrice(map.get("aprodPrice")[i]);
+					}
+					if(!CommUtil.isNull(map.get("aformatType"))){
+						diyInfoVO.setFormatType(map.get("aformatType")[i]);
+					}
+					if(!CommUtil.isNull(map.get("avbom"))){
+						diyInfoVO.setVbom(map.get("avbom")[i]);
+					}
+					
+						//iHibernateDAO.delete(DiyInfoVO.class, Integer.valueOf(adiyCode[i]));
+						//获取成品编码
+						JSONArray reqbom = JSONArray.fromObject(diyInfoVO.getVbom());
+						String tc_aah01 = reqbom.getJSONObject(0).get("tc_aah01")+"";
+						diyInfoVO.setVcode(tc_aah01);
+						diyInfoVO.setTs(new Timestamp(System.currentTimeMillis()));
+						iHibernateDAO.save(diyInfoVO);
+						System.out.println("-------------------定制信息保存结束--------------------");
 				}
-				if(!CommUtil.isNull(map.get("aprodName"))){
-					diyInfoVO.setProdName(map.get("aprodName")[i]);
-				}
-				if(!CommUtil.isNull(map.get("adiyBom"))){
-					diyInfoVO.setDiyBom(map.get("adiyBom")[i]);
-				}
-				if(!CommUtil.isNull(map.get("adiyBomDesc"))){
-					diyInfoVO.setDiyBomDesc(map.get("adiyBomDesc")[i]);
-				}
-				if(!CommUtil.isNull(map.get("adiyImgUrl"))){
-					diyInfoVO.setDiyImgUrl(map.get("adiyImgUrl")[i]);
-				}
-				if(!CommUtil.isNull(map.get("adiyType"))){
-					diyInfoVO.setDiyType(map.get("adiyType")[i]);
-				}
-				if(!CommUtil.isNull(map.get("adiySize"))){
-					diyInfoVO.setDiySize(map.get("adiySize")[i]);
-				}
-				if(!CommUtil.isNull(map.get("adiyCraft"))){
-					diyInfoVO.setDiyCraft(map.get("adiyCraft")[i]);
-				}
-				if(!CommUtil.isNull(map.get("aprodPrice"))){
-					diyInfoVO.setProdPrice(map.get("aprodPrice")[i]);
-				}
-				if(!CommUtil.isNull(map.get("aformatType"))){
-					diyInfoVO.setFormatType(map.get("aformatType")[i]);
-				}
-				if(!CommUtil.isNull(map.get("avbom"))){
-					diyInfoVO.setVbom(map.get("avbom")[i]);
-				}
-				try {
-					//iHibernateDAO.delete(DiyInfoVO.class, Integer.valueOf(adiyCode[i]));
-					diyInfoVO.setTs(new Timestamp(System.currentTimeMillis()));
-					iHibernateDAO.save(diyInfoVO);
-					System.out.println("-------------------定制信息保存结束--------------------");
-					renderText("定制信息保存成功!");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				renderText("定制信息保存成功!");
+			} catch (Exception e) {
+				renderText("定制信息保存异常!");
+				e.printStackTrace();
 			}
 		}
 	}

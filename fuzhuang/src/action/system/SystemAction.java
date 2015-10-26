@@ -411,7 +411,7 @@ public class SystemAction extends BaseAction {
 		// ‰»Î≤È—Ø
 		String search_input = request.getParameter("searchinput");
 		
-		String wh = " 1=1";
+		String wh = " prodCode is not null ";
 		if(!CommUtil.isNull(search_input)){
 			wh = " vcode like '%"+search_input+"%' or prodCode like '%"+search_input+"%'";
 		}
