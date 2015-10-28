@@ -420,7 +420,7 @@ public class SystemAction extends BaseAction {
 		Map<String, Object> jsonmap = new HashMap<String, Object>();
 		jsonmap.put("total", total);
 		jsonmap.put("rows", list);
-		renderJson(jsonmap,JsonUtils.configJson("yyyy-MM-dd hh:ss:mm"));
+		renderJson(jsonmap,JsonUtils.configJson("yyyy-MM-dd HH:mm:ss"));
 	}
 	
 	/**
