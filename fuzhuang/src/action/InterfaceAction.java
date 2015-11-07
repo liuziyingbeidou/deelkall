@@ -1694,6 +1694,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		//String bomStr= "{\"diySubCont\":{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\",\"selValue\":{\"name\":\"2\",\"code\":\"圆角\"}},\"diyFra\":{\"name\":\"毛和其它素色黑\",\"code\":\"11116110003\",\"id\":\"99\",\"specname\":\"23#1\"},\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}";
 		//String bomStr = "[{\"diySubCont\":[{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XB\"},{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\"},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\"},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\"},{\"name\":\"撞色部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头/胸袋\",\"appendCode\":\"11141191633\",\"code\":\"02/03\"},\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141191633\",\"code\":\"01\"},\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190420\",\"code\":\"01\"},\"code\":\"SY\"}],\"diyName\":\"西服上衣\",\"diyCode\":\"01\",\"diyFra\":{\"name\":\"毛绒素色蓝\",\"code\":\"11113150006\",\"id\":\"154\",\"specname\":\"1#jk\"},\"diyPro\":\"19\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}]";
 		//String bomStr = "[{\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}},\"diyCode\":\"01\",\"diyPro\":\"19\",\"diySubCont\":[{\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\"},{\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\"},{\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\"},{\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\"}],\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11111350014\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"}}]";
+		//String bomStr = "[{\"diyFra\":{\"name\":\"毛绒素色黑\",\"code\":\"11113110002\",\"id\":\"152\",\"specname\":\"有效幅宽148CM# Gr.435g/m 36s/2*36s/2 W90% WS10%    (NATSUN 2015/I)\"},\"diyCode\":\"05\",\"diyLin\":{},\"diySubCont\":[{\"name\":\"撞色部位\",\"code\":\"ZW\",\"selValue\":{\"name\":\"领子/克夫\",\"appendCode\":\"11121481004\",\"code\":\"01/03\"},\"vsname\":\"zhuangse\"}],\"diyPro\":\"25\",\"diyName\":\"长袖  衬衣\"}]";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
 		
@@ -1992,8 +1993,10 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				String[] aspec = spec.split(IConstant.SPEC_3D_SPLIT);
 				if(aspec.length == 2){
 					vo.setVspec(CommUtil.getNumbers(aspec[0]));
-					setBomEm(list_bom,vsn,vo,null);
+				}else{
+					vo.setVspec("140");//默认规格
 				}
+				setBomEm(list_bom,vsn,vo,null);
 			}
 		}
 	}
@@ -2040,8 +2043,8 @@ public class InterfaceAction extends BaseAction implements Serializable {
 			if("n".equals(fg)){//撞色、贴布
 				BtcconfigBVO cBVO = new BtcconfigBVO();
 				cBVO.setVcode(btvo.getVcode());
-				Double nspec = Double.valueOf(btvo.getVspec());
-				cBVO.setNunitmny(nspec);
+				Double dh = btvo.getNunitmny();
+				cBVO.setNunitmny(dh);
 				//规格
 				cBVO.setVspec(btvo.getVspec());
 				list_bom.add(cBVO);
