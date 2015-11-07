@@ -503,6 +503,7 @@ select{width:152px;}
 					    <td nowrap align="right" width="11%">规格:</td>
 					    <td width="35%">
 					    <input name='auxiliaryVO.specname' id="specname" type="text" class="text" style="width:154px" value="${auxiliaryVO.specname}" />
+					         (提示格式:有效幅宽<font color="red">#</font>其他内容)
 					    </td>
 					    </tr>
 					    <tr>
