@@ -142,6 +142,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 			if(user == null || "".equals(user)){
 				wh.append(" and f.isClient=1");
 			}
+			wh.append(" and f.isRelease=1");
 		}
 		
 		StringBuffer sql = new StringBuffer();
@@ -427,6 +428,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		if(user == null || "".equals(user)){
 			wh.append(" and f.isClient=1");
 		}
+		wh.append(" and f.isRelease=1");
 		
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
