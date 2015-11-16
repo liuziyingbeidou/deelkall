@@ -58,8 +58,11 @@ $(function(){
 	$(".release").change(function(){
 		var vl = $(this).val();
 		if(vl == 1){
-			alert(checkSS());
-			$(".release-n").prop("checked","checked");
+			var msg = checkSS();
+			if(msg != ""){
+				alert("以下顺色字段为空：\n"+msg);
+				$(".release-n").prop("checked","checked");
+			}
 		}
 	});
 	
@@ -294,6 +297,41 @@ function openIcis(proclassid,msg,sn)
 	$('#w').window('open');
 }
 
+function sub_setvalue(proclassid){
+	//遍历顺色关联表取值赋予顺色关联字段
+	var $dg = $('#pttg_cis');
+	var all1 = $dg.datagrid('getData').rows;
+	for ( var i = 0; i < all1.length; i++) {
+		if (all1[i].proclassid == proclassid) {
+			$("#icisLine").val(all1[i].icisLine);
+			$("#icisLineNM").val(all1[i].icisLineNM);
+			$("#icisLineNM-text").text(all1[i].icisLineNM);
+			$("#icisButton").val(all1[i].icisButton);
+			$("#icisButtonNM").val(all1[i].icisButtonNM);
+			$("#icisButtonNM-text").text(all1[i].icisButtonNM);
+			$("#icisLining").val(all1[i].icisLining);
+			$("#icisLiningNM").val(all1[i].icisLiningNM);
+			$("#icisLiningNM-text").text(all1[i].icisLiningNM);
+			$("#icisXLining").val(all1[i].icisXLining);
+			$("#icisXLiningNM").val(all1[i].icisXLiningNM);
+			$("#icisXLiningNM-text").text(all1[i].icisXLiningNM);
+			$("#icisHBLining").val(all1[i].icisHBLining);
+			$("#icisHBLiningNM").val(all1[i].icisHBLiningNM);
+			$("#icisHBLiningNM-text").text(all1[i].icisHBLiningNM);
+			$("#icisBagging").val(all1[i].icisBagging);
+			$("#icisBaggingNM").val(all1[i].icisBaggingNM);
+			$("#icisBaggingNM-text").text(all1[i].icisBaggingNM);
+			$("#icisComponent").val(all1[i].icisComponent);
+			$("#icisComponentNM").val(all1[i].icisComponentNM);
+			$("#icisComponentNM-text").text(all1[i].icisComponentNM);
+			$("#iciszipper").val(all1[i].iciszipper);
+			$("#iciszipperNM").val(all1[i].iciszipperNM);
+			$("#iciszipperNM-text").text(all1[i].iciszipperNM);
+			break;
+		}
+	}
+}
+
 //取消
 function sub_cancel(){
 	$('#w').window('close');
@@ -433,6 +471,7 @@ function checkSS(){
 		if(!$(this).is(':checked')){
 			return;	
 		}
+		sub_setvalue($(this).val());
 		var psn = $(this).attr("mysn");
 		//xifushangyi 
 		if(psn == "xifushangyi"){
@@ -459,7 +498,9 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				xfmsg += " [袋布]";
 			}
-			msg += xfmsg+" ";
+			if(xfmsg != "\n西服："){
+				msg += xfmsg+" ";
+			}
 		}
 		//majia 
 		if(psn == "majia"){
@@ -480,7 +521,9 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				mjmsg += " [袋布]";
 			}
-			msg += mjmsg+" ";
+			if(mjmsg != "\n马甲："){
+				msg += mjmsg+" ";
+			}
 		}
 		//zhongshanzhuang 
 		if(psn == "zhongshanzhuang"){
@@ -506,7 +549,10 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				zszmsg += " [袋布]";
 			}
-			msg += zszmsg+" ";
+			if(zszmsg != "\n中山装："){
+				msg += zszmsg+" ";
+			}
+			
 		}
 		//zhongshililing 
 		if(psn == "zhongshililing"){
@@ -532,7 +578,10 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				zsllmsg += " [袋布]";
 			}
-			msg += zsllmsg+" ";
+			if(zsllmsg != "\n中式立领："){
+				msg += zsllmsg+" ";
+			}
+			
 		}
 		//xiku 
 		if(psn == "xiku"){
@@ -554,7 +603,10 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				xkmsg += " [袋布]";
 			}
-			msg += xkmsg+" ";
+			if(xkmsg != "\n西裤："){
+				msg += xkmsg+" ";		
+			}
+			
 		}
 		//xiuxianku 
 		if(psn == "xiuxianku"){
@@ -576,7 +628,10 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				xxkmsg += " [袋布]";
 			}
-			msg += xxkmsg+" ";
+			if(xxkmsg != "\n休闲裤："){
+				msg += xxkmsg+" ";				
+			}
+			
 		}
 		//changxiuchenyi 
 		if(psn == "changxiuchenyi"){
@@ -590,7 +645,10 @@ function checkSS(){
 			if(icisButton == "" || icisButton == null){
 				cxcymsg += " [纽扣]";
 			}
-			msg += cxcymsg+" ";
+			if(cxcymsg != "\n长袖衬衣："){
+				msg += cxcymsg+" ";
+			}
+			
 		}
 		//duanxiuchenyi 
 		if(psn == "duanxiuchenyi"){
@@ -604,7 +662,9 @@ function checkSS(){
 			if(icisButton == "" || icisButton == null){
 				dxcymsg += " [纽扣]";
 			}
-			msg += dxcymsg+" ";
+			if(dxcymsg != "\n短袖衬衣："){
+				msg += dxcymsg+" ";
+			}
 		}
 		//changdayi 
 		if(psn == "changdayi"){
@@ -630,7 +690,10 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				cdymsg += " [袋布]";
 			}
-			msg += cdymsg+" ";
+			if(cdymsg != "\n长大衣："){
+				msg += cdymsg+" ";
+			}
+			
 		}
 		//zhongchangdayi 
 		if(psn == "zhongchangdayi"){
@@ -656,7 +719,10 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				zcdymsg += " [袋布]";
 			}
-			msg += zcdymsg+" ";
+			if(zcdymsg != "\n中长大衣："){
+				msg += zcdymsg+" ";
+			}
+			
 		}
 		//duandayi
 		if(psn == "duandayi"){
@@ -682,10 +748,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				ddymsg += " [袋布]";
 			}
-			msg += ddymsg+" ";
+			if(ddymsg != "\n短大衣："){
+				msg += ddymsg+" ";
+			}
+			
 		}
+		clearCis();
 	});
-	 return msg == "" ? "" : "以下顺色字段为空：\n"+msg;
+	 return msg == "" ? "" : msg;
 }
 
 </script>
