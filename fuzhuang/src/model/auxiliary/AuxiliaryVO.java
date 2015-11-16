@@ -154,6 +154,8 @@ public class AuxiliaryVO extends IdEntity {
 	private Integer basedocId;
 	//是否前展		smallint
 	private Integer isClient;
+	//是否上架
+	private Integer isRelease;
 
 	public String getVmoduletype() {
 		return vmoduletype;
@@ -518,6 +520,12 @@ public class AuxiliaryVO extends IdEntity {
 	}
 	public void setIsClient(Integer isClient) {
 		this.isClient = isClient;
+	}
+	public Integer getIsRelease() {
+		return isRelease;
+	}
+	public void setIsRelease(Integer isRelease) {
+		this.isRelease = isRelease;
 	}
 	
 }
