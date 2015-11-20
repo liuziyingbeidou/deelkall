@@ -43,6 +43,7 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import util.CommUtil;
+import util.HttpTools;
 import util.ObjectToJSON;
 import utils.DateUtil;
 import utils.JsonUtils;
@@ -1698,6 +1699,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		//String bomStr = "[{\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}},\"diyCode\":\"01\",\"diyPro\":\"19\",\"diySubCont\":[{\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\"},{\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\"},{\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\"},{\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\"}],\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11111350014\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"}}]";
 		//String bomStr = "[{\"diyFra\":{\"name\":\"毛绒素色黑\",\"code\":\"11113110002\",\"id\":\"152\",\"specname\":\"有效幅宽148CM# Gr.435g/m 36s/2*36s/2 W90% WS10%    (NATSUN 2015/I)\"},\"diyCode\":\"05\",\"diyLin\":{},\"diySubCont\":[{\"name\":\"撞色部位\",\"code\":\"ZW\",\"selValue\":{\"name\":\"领子/克夫\",\"appendCode\":\"11121481004\",\"code\":\"01/03\"},\"vsname\":\"zhuangse\"}],\"diyPro\":\"25\",\"diyName\":\"长袖  衬衣\"}]";
 		//String bomStr = "[{\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11111350014\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"},\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"涤粘花纹白\",\"code\":\"12102620496\",\"specname\":\"有效幅宽144CM#52%T 48%R 68D*120D\"},\"sleeveLining\":{\"name\":\"涤纶条白\",\"code\":\"12103420538\",\"specname\":\"有效幅宽148CM,100%涤纶 68D*68D\"}},\"diySubCont\":[{\"name\":\"扣位数\",\"code\":\"K\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"vsname\":\"kouweishu\"},{\"name\":\"下袋\",\"code\":\"XD\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"vsname\":\"xiadai\"},{\"name\":\"票袋\",\"code\":\"PD\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"vsname\":\"piaodai\"},{\"name\":\"撞色部位\",\"code\":\"ZW\",\"selValue\":{\"name\":\"领子\",\"appendCode\":\"11141131634\",\"code\":\"01\"},\"vsname\":\"zhuangse\"},{\"name\":\"贴布部位\",\"code\":\"TW\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141131634\",\"code\":\"01\"},\"vsname\":\"tiebu\"},{\"name\":\"特殊锁眼\",\"code\":\"SY\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190433\",\"code\":\"01\"},\"vsname\":\"suoyan\"}],\"diyPro\":\"19\",\"diyName\":\"西服上衣\"}]";
+		//String bomStr = "[{\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"}},\"diyName\":\"西服上衣\",\"diySubCont\":[{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"}},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"}},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"}}],\"diyFra\":{\"name\":\"全羊绒花纹灰\",\"code\":\"11111530001\",\"id\":\"101\",\"specname\":\"有效幅宽150CM# 100%WV Super130s 295-305GR/MT *150CM \"}}]";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
 		
@@ -2396,6 +2398,23 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		}
 	}
 	
+	/**
+	 * @Description: 远程获取幅宽 根据料号
+	 * @param @param vcode
+	 * @param @return
+	 * @return Integer
+	 */
+	public Integer getSpec(String vcode){
+		String url = "http://3d.deelkall.com/remote/webservice/getSpec/"+vcode;
+		String info = HttpTools.getDataByURL(url);
+		
+		if(info != null){
+			return Integer.valueOf(info);
+		}else{
+			return  140;
+		}
+	}
+	
 	//测试
 	public void test(){
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -2403,6 +2422,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		String[] prodCode = request.getParameterValues("prodCode[]");
 		String[] prodName = request.getParameterValues("prodName[]");
 		System.out.println(prodCode);
+		System.out.println(getSpec("11112111046"));
 		/*String price = request.getParameter("num");
 		renderJs(CommUtil.toTurnPrice(Double.valueOf(price)));*/
 	}

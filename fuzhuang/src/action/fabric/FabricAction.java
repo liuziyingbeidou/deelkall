@@ -76,10 +76,12 @@ public class FabricAction extends BaseAction {
 		String deviceType = request.getParameter("deviceType");
 		//是否前展
 		String isClient = request.getParameter("isClient");
+		//是否上架
+		String isRelease = request.getParameter("isRelease");
 		
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append(" f.id,f.vcode,p.vname as patternName,i.vname as ingredientName,c.vname as colourName,f.bisupload,f.vname,f.deviceType");
+		sql.append(" f.id,f.vcode,p.vname as patternName,i.vname as ingredientName,c.vname as colourName,f.bisupload,f.vname,f.deviceType,f.isRelease");
 		sql.append(" from fz_auxiliary f");
 		sql.append(" left join fz_base_doc p ");
 		sql.append(" on f.patternid = p.id");
@@ -120,6 +122,16 @@ public class FabricAction extends BaseAction {
 				sql.append(" and f.isClient = 1");
 			}else if("no".equals(isClient)){
 				sql.append(" and (f.isClient = 0 or ifnull(f.isClient,0)=0)");
+			}
+		}
+		
+		if(isRelease != null && !"".equals(isRelease)){
+			if("all".equals(isRelease)){
+				sql.append(" and (f.isRelease in(1,0) or ifnull(f.isRelease,0)=0)");
+			}else if("yes".equals(isRelease)){
+				sql.append(" and f.isRelease = 1");
+			}else if("no".equals(isRelease)){
+				sql.append(" and (f.isRelease = 0 or ifnull(f.isRelease,0)=0)");
 			}
 		}
 		
