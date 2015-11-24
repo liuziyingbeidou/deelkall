@@ -130,17 +130,23 @@ $(function(){
 	$(".isClient").click(function(){
 	   gridload('pttg');
 	});
+	
+	$(".isRelease").click(function(){
+	   gridload('pttg');
+	});
 
 	function gridload(emid){
 		var searchinput = $("input[name='search_cont']").val().trim();
 		var bisupload = $("input[name='bisupload']:checked").val();
 		var deviceType = $("input[name='deviceType']:checked").val();
 		var isClient = $("input[name='isClient']:checked").val();
+		var isRelease = $("input[name='isRelease']:checked").val();
 		$('#'+emid).datagrid('load',{
 			searchinput:searchinput,
 			bisupload:bisupload,
 			deviceType:deviceType,
-			isClient:isClient
+			isClient:isClient,
+			isRelease:isRelease
 		});
 	}
 
@@ -272,6 +278,10 @@ function del(id){
 		           	是否展示：  <input type="radio" class="isClient" name=isClient value="all" checked />全部
 		                	<input type="radio" class="isClient" name="isClient" value="yes" />是
 		                	<input type="radio" class="isClient" name="isClient" value="no" />否
+		            &nbsp;&nbsp;
+		           	是否上架：  <input type="radio" class="isRelease" name=isRelease value="all" checked />全部
+		                	<input type="radio" class="isRelease" name="isRelease" value="yes" />是
+		                	<input type="radio" class="isRelease" name="isRelease" value="no" />否
                 	</span>
                 	</span>
                 	<span style="float: right;"><a onclick="javascript:add()" class="menu-btn">【新增】</a>&nbsp;&nbsp;</span>
