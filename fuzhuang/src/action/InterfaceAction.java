@@ -40,6 +40,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.tools.ant.util.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import util.CommUtil;
@@ -149,6 +150,8 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append(" f.id,f.vcode,p.vname as patternName,i.vname as ingredientName,c.vname as colourName,f.bisupload,f.ambient,f.specular,f.vrank,f.vfileupload,f.specname,f.vname,f.dpurchasemny,f.iautype");
+		//添加成分、色系、花型编码
+		sql.append(",p.vcode as patternCode,i.vcode as ingredientCode,c.vcode as colourCode");
 		sql.append(" from fz_auxiliary f");
 		sql.append(" left join fz_base_doc p ");
 		sql.append(" on f.patternid = p.id");
@@ -204,6 +207,9 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				}else if("4".equals(arry[13]+"")){
 					dto.setVdef3("皮革类");
 				}
+				dto.setPatternCode(CommUtil.isNullOrEm(arry[14]) ? null : arry[14].toString());
+				dto.setIngredientCode(CommUtil.isNullOrEm(arry[15]) ? null : arry[15].toString());
+				dto.setColourCode(CommUtil.isNullOrEm(arry[16]) ? null : arry[16].toString());
 				
 				list.add(dto);
 			}
@@ -434,6 +440,8 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append(" f.id,f.vcode,p.vname as patternName,i.vname as ingredientName,c.vname as colourName,f.bisupload,f.ambient,f.specular,f.vrank,f.vfileupload,f.specname,f.vname,f.dpurchasemny,f.iautype");
+		//添加成分、色系、花型编码
+		sql.append(",p.vcode as patternCode,i.vcode as ingredientCode,c.vcode as colourCode");
 		sql.append(" from fz_auxiliary f");
 		sql.append(" left join fz_base_doc p ");
 		sql.append(" on f.patternid = p.id");
@@ -498,6 +506,10 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				}else if("4".equals(arry[13]+"")){
 					dto.setVdef3("皮革类");
 				}
+				
+				dto.setPatternCode(CommUtil.isNullOrEm(arry[14]) ? null : arry[14].toString());
+				dto.setIngredientCode(CommUtil.isNullOrEm(arry[15]) ? null : arry[15].toString());
+				dto.setColourCode(CommUtil.isNullOrEm(arry[16]) ? null : arry[16].toString());
 				list.add(dto);
 			}
 		}
@@ -1795,16 +1807,16 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		System.out.println("子部件:"+diySubCont);
 		
 		//②面料
-		orgBom(list_bom,fraJson,null,IConstant.BOM_JC_FABRIC);
+		orgBom(list_bom,fraJson,null,IConstant.BOM_JC_FABRIC,diyPro+"");
 		//衣里料、里布用料
-		orgBom(list_bom,lininJson,fraJson,IConstant.BOM_JC_LINING);
+		orgBom(list_bom,lininJson,fraJson,IConstant.BOM_JC_LINING,diyPro+"");
 		//袖里料
-		orgBom(list_bom,linSlvJson,fraJson,IConstant.BOM_JC_SLEEVELINING);
+		orgBom(list_bom,linSlvJson,fraJson,IConstant.BOM_JC_SLEEVELINING,diyPro+"");
 		//后背用料 
-		orgBom(list_bom,linBackJson,fraJson,IConstant.BOM_JC_BACKFABRIC);
+		orgBom(list_bom,linBackJson,fraJson,IConstant.BOM_JC_BACKFABRIC,diyPro+"");
 		
 		//③顺色部分-袋布、拉链
-		orgSSBom(list_bom,fraJson);
+		orgSSBom(list_bom,fraJson,diyPro+"");
 		/**组织BOM-end**/
 		
 		/**
@@ -1875,6 +1887,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				bvo.setVcode(appendCode+"");
 				bvo.setNunitmny(allM);
 				bvo.setVjobnum(IConstant.VJOBNUM);
+				bvo.setVspec(getSpec(appendCode+"")+"");
 				setBomEm(list_bom,vsname+"",bvo,"n");
 			}else if(IConstant.PART_SNAMW_TB.equals(vsname)){
 				//贴布
@@ -1883,6 +1896,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				bvo.setVcode(appendCode+"");
 				bvo.setNunitmny(allM);
 				bvo.setVjobnum(IConstant.VJOBNUM);
+				bvo.setVspec(getSpec(appendCode+"")+"");
 				setBomEm(list_bom,vsname+"",bvo,"n");
 			}else if(IConstant.PART_SNAMW_SY.equals(vsname) || IConstant.PART_SNAMW_ZB.equals(vsname)){
 				bvo.setVcode(appendCode+"");
@@ -1955,19 +1969,25 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 * @param 
 	 * @return void
 	 */
-	public void orgSSBom(List<BtcconfigBVO> list_bom,JSONObject frajson){
+	public void orgSSBom(List<BtcconfigBVO> list_bom,JSONObject frajson,String proclassid){
 		if(!CommUtil.isNull(frajson)){
 			BtcconfigBVO vo = new BtcconfigBVO();
 			String code = null;
 			//处理顺色-start
 			String fracode = frajson.getString("code");//面料编码
 			//拉链
-			code = getSSCode(fracode,IConstant.BOM_JC_LALIAN);
-			vo.setVcode(code);
+			code = getSSCode(proclassid,fracode,IConstant.BOM_JC_LALIAN);
+			if(!CommUtil.isNullOrEm(code)){
+				vo.setVcode(code);
+			}
+			vo.setVspec(getSpec(vo.getVcode())+"");
 			setBomEm(list_bom,IConstant.BOM_JC_LALIAN,vo,"y");
 			//袋布
-			code = getSSCode(fracode,IConstant.BOM_JC_DAIBU);
-			vo.setVcode(code);
+			code = getSSCode(proclassid,fracode,IConstant.BOM_JC_DAIBU);
+			if(!CommUtil.isNullOrEm(code)){
+				vo.setVcode(code);
+			}
+			vo.setVspec(getSpec(vo.getVcode())+"");
 			setBomEm(list_bom,IConstant.BOM_JC_DAIBU,vo,"y");
 			//处理顺色-end
 		}
@@ -1978,7 +1998,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 * @param 
 	 * @return void
 	 */
-	public void orgBom(List<BtcconfigBVO> list_bom,JSONObject json,JSONObject frajson,String vsn){
+	public void orgBom(List<BtcconfigBVO> list_bom,JSONObject json,JSONObject frajson,String vsn,String proclassid){
 		if(!CommUtil.isNull(json)){
 			BtcconfigBVO vo = new BtcconfigBVO();
 			String code = json.getString("code");
@@ -1986,21 +2006,28 @@ public class InterfaceAction extends BaseAction implements Serializable {
 			//处理顺色-start
 			if(IConstant.PART_CODE_SS.equals(code)){
 				String fracode = frajson.getString("code");//面料编码
-				code = getSSCode(fracode,vsn);
-				if(CommUtil.isNull(code)){
-					String specsql = "select specname from fz_auxiliary where vmoduletype='"+IConstant.MOD_LINING+"' and vcode='"+code+"'";
-					spec = getStrBySQL(specsql) + "";
+				String tcode = getSSCode(proclassid,fracode,vsn);
+				if(!CommUtil.isNullOrEm(tcode)){
+					code = tcode;
 				}
+				if(CommUtil.isNull(code)){
+					//String specsql = "select specname from fz_auxiliary where vmoduletype='"+IConstant.MOD_LINING+"' and vcode='"+code+"'";
+					//spec = getStrBySQL(specsql) + "";
+					spec = getSpec(code)+"";
+				}
+			}else{
+				spec = getSpec(code)+"";
 			}
 			vo.setVcode(code);
 			//处理顺色-end
 			if(!CommUtil.isNull(spec)){
-				String[] aspec = spec.split(IConstant.SPEC_3D_SPLIT);
-				if(aspec.length == 2){
-					vo.setVspec(CommUtil.getNumbers(aspec[0]));
-				}else{
-					vo.setVspec("140");//默认规格
-				}
+//				String[] aspec = spec.split(IConstant.SPEC_3D_SPLIT);
+//				if(aspec.length == 2){
+//					vo.setVspec(CommUtil.getNumbers(aspec[0]));
+//				}else{
+//					vo.setVspec("140");//默认规格
+//				}
+				vo.setVspec(spec);
 				setBomEm(list_bom,vsn,vo,null);
 			}
 		}
@@ -2013,23 +2040,23 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 * @param @return
 	 * @return String
 	 */
-	public String getSSCode(String fracode,String vsn){
+	public String getSSCode(String proclassid,String fracode,String vsn){
 		String sscode = null;
 		//里料
 		if(IConstant.BOM_JC_LINING.equals(vsn)){
-			String sql = "select b.icisLining from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			String sql = "select c.vcode from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
 			sscode = getStrBySQL(sql)+"";
 		}else if(IConstant.BOM_JC_SLEEVELINING.equals(vsn)){
-			String sql = "select b.icisXLining from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			String sql = "select c.vcode from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisXLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
 			sscode = getStrBySQL(sql)+"";
 		}else if(IConstant.BOM_JC_BACKFABRIC.equals(vsn)){
-			String sql = "select b.icisHBLining from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			String sql = "select c.vcode from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisHBLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
 			sscode = getStrBySQL(sql)+"";
 		}else if(IConstant.BOM_JC_LALIAN.equals(vsn)){//拉链
-			String sql = "select b.iciszipper from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			String sql = "select c.vcode from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.iciszipper where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
 			sscode = getStrBySQL(sql)+"";
 		}else if(IConstant.BOM_JC_DAIBU.equals(vsn)){//袋布
-			String sql = "select b.icisBagging from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and a.vcode='"+fracode+"'";
+			String sql = "select c.vcode from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisBagging where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
 			sscode = getStrBySQL(sql)+"";
 		}
 		return sscode;
@@ -2406,6 +2433,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 */
 	public Integer getSpec(String vcode){
 		String url = "http://3d.deelkall.com/remote/webservice/getSpec/"+vcode;
+		//String url = "http://127.0.0.1:8080/remote/webservice/getSpec/"+vcode;
 		String info = HttpTools.getDataByURL(url);
 		
 		if(info != null){

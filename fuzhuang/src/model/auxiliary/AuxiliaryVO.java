@@ -31,14 +31,20 @@ public class AuxiliaryVO extends IdEntity {
 	private Integer patternid;
 	//花型名称{仅用于DataGrid显示}
 	private String patternName;
+	@Transient
+	private String patternCode;
 	//成份id		int
 	private Integer ingredientid;	
 	//成分名称{仅用于DataGrid显示}
 	private String ingredientName;
+	@Transient
+	private String ingredientCode;
 	//色系id		int
 	private Integer colourid;
 	//色系名称{仅用于DataGrid显示}
 	private String colourName;
+	@Transient
+	private String colourCode;
 	//料件大类id		int
 	private Integer materialsid;
 	//料件子类id		int
@@ -526,6 +532,24 @@ public class AuxiliaryVO extends IdEntity {
 	}
 	public void setIsRelease(Integer isRelease) {
 		this.isRelease = isRelease;
+	}
+	public String getPatternCode() {
+		return patternCode;
+	}
+	public void setPatternCode(String patternCode) {
+		this.patternCode = patternCode;
+	}
+	public String getIngredientCode() {
+		return ingredientCode;
+	}
+	public void setIngredientCode(String ingredientCode) {
+		this.ingredientCode = ingredientCode;
+	}
+	public String getColourCode() {
+		return colourCode;
+	}
+	public void setColourCode(String colourCode) {
+		this.colourCode = colourCode;
 	}
 	
 }
