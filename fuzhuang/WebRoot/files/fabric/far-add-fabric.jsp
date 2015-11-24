@@ -23,6 +23,12 @@ if("edit".equals(type)){
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
 <link rel="stylesheet" rev="stylesheet" href="${pageContext.request.contextPath}/css/style.css" type="text/css" media="all" />
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-easyui-1.4.1/plugins/jquery.messager.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/jquery-easyui-1.4.1/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/jquery-easyui-1.4.1/themes/icon.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/messagerbox.js"></script>
+
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/blbasejs.js"></script>
 <script type="text/javascript">
 
@@ -60,13 +66,24 @@ $(function(){
 		if(vl == 1){
 			var msg = checkSS();
 			if(msg != ""){
-				alert("以下顺色字段为空：\n"+msg);
-				$(".release-n").prop("checked","checked");
+				confirm("<br>以下顺色字段为空：<br>"+msg,"提示",ok_release);
+				msg_r = msg;
 			}
+		}else{
+			$(".vmemo").val("");
 		}
 	});
 	
 });
+var msg_r = "";
+function ok_release(r){
+	if(r){
+		$(".vmemo").val("以下顺色字段为空："+msg_r.replace(new RegExp("<br>","g"),"\n"));
+	}else{
+		$(".release-n").prop("checked","checked");
+	}
+}
+
 function openScript(url, width, height)
 {
 var left = (screen.width-width)/2;
@@ -142,6 +159,8 @@ function save(){
 	if(check()){
 		return ;
 	}
+	
+	$(".vmemo").val("以下顺色字段为空："+checkSS().replace(new RegExp("<br>","g"),"\n"));
 	
 	//主部件子表
 	var tb_cis= $('#pttg_cis').datagrid('getRows');
@@ -475,7 +494,7 @@ function checkSS(){
 		var psn = $(this).attr("mysn");
 		//xifushangyi 
 		if(psn == "xifushangyi"){
-			var xfmsg = "\n西服：";
+			var xfmsg = "<br>西服：";
 			//icisLine	icisButton	icisLining	icisXLining	icisBagging
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
@@ -498,13 +517,13 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				xfmsg += " [袋布]";
 			}
-			if(xfmsg != "\n西服："){
+			if(xfmsg != "<br>西服："){
 				msg += xfmsg+" ";
 			}
 		}
 		//majia 
 		if(psn == "majia"){
-			var mjmsg = "\n马甲：";
+			var mjmsg = "<br>马甲：";
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
 			var icisLining= $("#icisLining").val();
@@ -521,13 +540,13 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				mjmsg += " [袋布]";
 			}
-			if(mjmsg != "\n马甲："){
+			if(mjmsg != "<br>马甲："){
 				msg += mjmsg+" ";
 			}
 		}
 		//zhongshanzhuang 
 		if(psn == "zhongshanzhuang"){
-			var zszmsg = "\n中山装：";
+			var zszmsg = "<br>中山装：";
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -549,14 +568,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				zszmsg += " [袋布]";
 			}
-			if(zszmsg != "\n中山装："){
+			if(zszmsg != "<br>中山装："){
 				msg += zszmsg+" ";
 			}
 			
 		}
 		//zhongshililing 
 		if(psn == "zhongshililing"){
-			var zsllmsg = "\n中式立领：";
+			var zsllmsg = "<br>中式立领：";
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -578,14 +597,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				zsllmsg += " [袋布]";
 			}
-			if(zsllmsg != "\n中式立领："){
+			if(zsllmsg != "<br>中式立领："){
 				msg += zsllmsg+" ";
 			}
 			
 		}
 		//xiku 
 		if(psn == "xiku"){
-			var xkmsg = "\n西裤：";	
+			var xkmsg = "<br>西裤：";	
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -603,14 +622,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				xkmsg += " [袋布]";
 			}
-			if(xkmsg != "\n西裤："){
+			if(xkmsg != "<br>西裤："){
 				msg += xkmsg+" ";		
 			}
 			
 		}
 		//xiuxianku 
 		if(psn == "xiuxianku"){
-			var xxkmsg = "\n休闲裤：";		
+			var xxkmsg = "<br>休闲裤：";		
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -628,14 +647,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				xxkmsg += " [袋布]";
 			}
-			if(xxkmsg != "\n休闲裤："){
+			if(xxkmsg != "<br>休闲裤："){
 				msg += xxkmsg+" ";				
 			}
 			
 		}
 		//changxiuchenyi 
 		if(psn == "changxiuchenyi"){
-			var cxcymsg = "\n长袖衬衣：";		
+			var cxcymsg = "<br>长袖衬衣：";		
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -645,14 +664,14 @@ function checkSS(){
 			if(icisButton == "" || icisButton == null){
 				cxcymsg += " [纽扣]";
 			}
-			if(cxcymsg != "\n长袖衬衣："){
+			if(cxcymsg != "<br>长袖衬衣："){
 				msg += cxcymsg+" ";
 			}
 			
 		}
 		//duanxiuchenyi 
 		if(psn == "duanxiuchenyi"){
-			var dxcymsg = "\n短袖衬衣：";		
+			var dxcymsg = "<br>短袖衬衣：";		
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -662,13 +681,13 @@ function checkSS(){
 			if(icisButton == "" || icisButton == null){
 				dxcymsg += " [纽扣]";
 			}
-			if(dxcymsg != "\n短袖衬衣："){
+			if(dxcymsg != "<br>短袖衬衣："){
 				msg += dxcymsg+" ";
 			}
 		}
 		//changdayi 
 		if(psn == "changdayi"){
-			var cdymsg = "\n长大衣：";		
+			var cdymsg = "<br>长大衣：";		
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -690,14 +709,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				cdymsg += " [袋布]";
 			}
-			if(cdymsg != "\n长大衣："){
+			if(cdymsg != "<br>长大衣："){
 				msg += cdymsg+" ";
 			}
 			
 		}
 		//zhongchangdayi 
 		if(psn == "zhongchangdayi"){
-			var zcdymsg = "\n中长大衣：";		
+			var zcdymsg = "<br>中长大衣：";		
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -719,14 +738,14 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				zcdymsg += " [袋布]";
 			}
-			if(zcdymsg != "\n中长大衣："){
+			if(zcdymsg != "<br>中长大衣："){
 				msg += zcdymsg+" ";
 			}
 			
 		}
 		//duandayi
 		if(psn == "duandayi"){
-			var ddymsg = "\n短大衣：";		
+			var ddymsg = "<br>短大衣：";		
 			//线  扣子 里料 袖里料 袋布
 			var icisLine = $("#icisLine").val();
 			var icisButton= $("#icisButton").val();
@@ -748,7 +767,7 @@ function checkSS(){
 			if(icisBagging == "" || icisBagging == null){
 				ddymsg += " [袋布]";
 			}
-			if(ddymsg != "\n短大衣："){
+			if(ddymsg != "<br>短大衣："){
 				msg += ddymsg+" ";
 			}
 			
@@ -862,7 +881,7 @@ select{width:152px;}
 					    <td nowrap align="right" width="11%">规格:</td>
 					    <td width="35%">
 					    <input name='auxiliaryVO.specname' id="specname" type="text" class="text" style="width:154px" value="${auxiliaryVO.specname}" />
-					         (提示格式:有效幅宽<font color="red">#</font>其他内容)
+					         (提示格式:有效幅宽148CM<font color="red">#</font>其他内容)
 					    </td>
 					    </tr>
 					    <tr>
@@ -907,7 +926,7 @@ select{width:152px;}
 					    <td nowrap align="right" width="11%">是否上架:</td>
 					    <td width="35%">
 					    <input name="auxiliaryVO.isRelease" class="release" type="radio" <c:if test='${auxiliaryVO.isRelease==1}'>checked</c:if> value="1">是
-					    <input name="auxiliaryVO.isRelease" class="release release-n" type="radio" <c:if test='${auxiliaryVO.isRelease==0}'>checked</c:if> checked value="0">否
+					    <input name="auxiliaryVO.isRelease" class="release release-n" type="radio" <c:if test='${auxiliaryVO.isRelease==0}'>checked</c:if> value="0">否
 					    </td>
 					    </tr>
 					    
@@ -919,10 +938,6 @@ select{width:152px;}
 					    </td>
 					    <td nowrap align="left" colspan="2" width="100%"><font color="red">*只允许上传.jpg、.jpeg和.gif类型图片文件</font></td>
 					    </tr>
-					  <tr style="display: none;">
-					    <td width="14%" align="right" nowrap>备注:</td>
-					    <td width="86%" colspan="3"><textarea name="auxiliaryVO.vmemo" cols="50" rows="5">${auxiliaryVO.vmemo }</textarea></td>
-					  </tr>
 					  <tr>
 					  	<td width="100%"  colspan="4" align="left" nowrap><hr /></td>
 					  </tr>
@@ -936,6 +951,10 @@ select{width:152px;}
 							<input name="proclassid" class="cb-ss pr-${bean.id }" mysn='${bean.vsname }' type="checkbox" onclick="javascript:changeIcis(this,'${bean.id }','${bean.vsname }');" value="${bean.id }"><a onclick="javascript:openIcis('${bean.id }','请选择品类','${bean.vsname }')">${bean.vname }</a>
 						</c:forEach>
 					    </td>
+					  </tr>
+					   <tr style="display:;">
+					    <td width="14%" align="right" nowrap>备注:</td>
+					    <td width="86%" colspan="3"><textarea class='vmemo' name="auxiliaryVO.vmemo" cols="50" rows="5">${auxiliaryVO.vmemo }</textarea></td>
 					  </tr>
 					 </table>
 			  <br />
