@@ -172,6 +172,8 @@ public interface IConstant {
 	/**以下是子部件对应简码**/
 	//顺色编码
 	public static final String PART_CODE_SS = "SS";
+	//同里料
+	public static final String PART_CODE_T1 = "t1";
 	//撞色
 	public static final String PART_SNAMW_ZS = "zhuangse";
 	//贴布
@@ -184,6 +186,8 @@ public interface IConstant {
 	public static final String PART_SNAMW_KWS = "kouweishu";
 	//袖扣数
 	public static final String PART_SNAMW_XKS = "xiukoushu";
+	//纽扣号
+	public static final String PART_SNAMW_NKH = "niukouhao";
 	
 	//耗料配色面料、肘部面料，作业编号为0001；特殊线、珠边线作业编号为0001；
 	public static final String VJOBNUM = "0001";
