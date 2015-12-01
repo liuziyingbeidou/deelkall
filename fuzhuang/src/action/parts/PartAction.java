@@ -185,7 +185,7 @@ public class PartAction extends BaseAction {
 		sql.append(" where 1=1");
 		
 		if(search_input != null && !"".equals(search_input)){
-			sql.append(" and s.vname like '%"+search_input+"%' or p.vname like '%"+search_input+"%'");
+			sql.append(" and (s.vname like '%"+search_input+"%' or p.vname like '%"+search_input+"%')");
 		}
 		
 		if(bisgyxj != null && !"".equals(bisgyxj)){
