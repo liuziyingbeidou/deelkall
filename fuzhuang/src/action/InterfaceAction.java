@@ -912,7 +912,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select ");
-		sql.append(" s.id,s.vname,s.vsname,s.vdatasource,s.bisgyxj,s.bisbom");
+		sql.append(" s.id,s.vname,s.vsname,s.vdatasource,s.bisgyxj,s.bisbom,s.vcode");
 		sql.append(" from fz_tem_proclass_bb pbb");
 		sql.append(" left join ");
 		sql.append(" fz_tem_subpart s");
@@ -958,6 +958,8 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				dto.setBisgyxj(CommUtil.isNullOrEm(arry[4]) ? null : Integer.valueOf(arry[4].toString()));
 				dto.setBisbom(CommUtil.isNullOrEm(arry[5]) ? null : Integer.valueOf(arry[5].toString()));
 				
+				//add by liuzy 2015-12-1
+				dto.setVcode(CommUtil.isNullOrEm(arry[6]) ? null : arry[6].toString());
 				sublist.add(dto);
 			}
 		}
@@ -968,6 +970,8 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				Map<String, Object> jsonmap = new HashMap<String, Object>();
 				//子部件id
 				Integer subid = subPartVO.getId();
+				//子部件编码
+				String vcode = subPartVO.getVcode();
 				//子部件名称
 				String vname = subPartVO.getVname();
 				//add by liuzy 2015-08-01 子部件简称
@@ -984,6 +988,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				jsonmap.put("vdatasource", vdatasource);
 				jsonmap.put("bisgyxj", bisgyxj);
 				jsonmap.put("bisbom", bisbom);
+				jsonmap.put("vcode", vcode);
 				
 				//根据子部件主表id查找子表数据
 				List<SubPartBVO> sublist_b = (List<SubPartBVO>)iHibernateDAO.findAll(SubPartBVO.class, " ifnull(dr,0)=0 and subpartid="+subid);
@@ -1904,6 +1909,9 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				setBomEm(list_bom,vsname+"",bvo,"n");
 			}else if(IConstant.PART_SNAMW_SY.equals(vsname) || IConstant.PART_SNAMW_ZB.equals(vsname)){
 				bvo.setVcode(appendCode+"");
+				if(IConstant.PART_SNAMW_NO.equals(code+"")){
+					bvo.setVcode(code+"");
+				}
 				setBomEm(list_bom,vsname+"",bvo,"y");
 			}
 		}else{//其他{不包含层级关系}
@@ -2126,6 +2134,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 						btcconfigBVO.setNunitmny((dh * dspec)/nspec);
 						//规格
 						btcconfigBVO.setVspec(btvo.getVspec());
+						break;
 					}else if(!isContains(list_bom,vsn) && fg == null){//本无面料、里料
 						BtcconfigBVO vo = new BtcconfigBVO();
 						vo.setVsname(vsn);
@@ -2137,11 +2146,17 @@ public class InterfaceAction extends BaseAction implements Serializable {
 						list_bom.add(vo);
 						break;
 					}else if(vsn.equals(vsname) &&"y".equals(fg)){//特殊锁眼、珠边（改变编码）
+						if(IConstant.PART_SNAMW_NO.equals(btvo.getVcode())){
+							list_bom.remove(btcconfigBVO);
+							break;
+						}
 						if(!CommUtil.isNull(btvo.getVcode())){
 							btcconfigBVO.setVcode(btvo.getVcode());
+							break;
 						}
 					}else if(vsn.equals(vsname) &&"r".equals(fg)){//纽扣（替换单耗）
 						btcconfigBVO.setNunitmny(btvo.getNunitmny());
+						break;
 					}
 					//list_bom_tem.add(btcconfigBVO);
 				}
