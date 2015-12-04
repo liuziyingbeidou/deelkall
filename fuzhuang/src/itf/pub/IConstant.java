@@ -188,6 +188,8 @@ public interface IConstant {
 	public static final String PART_SNAMW_XKS = "xiukoushu";
 	//纽扣号
 	public static final String PART_SNAMW_NKH = "niukouhao";
+	//无
+	public static final String PART_SNAMW_NO = "no";
 	
 	//耗料配色面料、肘部面料，作业编号为0001；特殊线、珠边线作业编号为0001；
 	public static final String VJOBNUM = "0001";
