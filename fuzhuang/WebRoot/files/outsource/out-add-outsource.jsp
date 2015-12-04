@@ -252,6 +252,8 @@ select{width:152px;}
 					    <input name="auxiliaryVO.vfileupload" id="filepath" value="${auxiliaryVO.vfileupload }" type="text" class="text"  readonly="readonly" size="20" maxlength="200">
 	                    [<a href="JavaScript:openem()">上传图片</a> ]
 					    </td>
+					    <td nowrap align="right" width="11%">价格:</td>
+					    <td width="27%"><input name='auxiliaryVO.dpurchasemny' id="dpurchasemny" type="text" class="text" style="width:154px" value="${auxiliaryVO.dpurchasemny }" /></td>
 					  </tr>
 					  <tr><td></td><td><font color="red">*只允许上传.jpg、.jpeg和.gif类型图片文件</font></td></tr>
 					   <tr style="display: none;">
