@@ -1560,12 +1560,12 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				String type = svo.getType();
 				if("sch_dz".equals(type)){
 					price = (daccountmny * dunitmny * dcoef + dprocefeemny * dprocecoefmny) * ddiscountmny/100 ;	
-					tzmny = tzmny + price;//Double.valueOf(CommUtil.toTurnPrice(price));
+					tzmny = tzmny + Double.valueOf(CommUtil.toTurnPrice(price));
 					//renderJs("0".equals(CommUtil.toTurnPrice(price)) ? IConstant.MSG_SCH :CommUtil.toTurnPrice(price));
 					prices.append(schemeBVO.getVdef1() + ":").append("0".equals(CommUtil.toTurnPrice(price)) ? IConstant.MSG_SCH :CommUtil.toTurnPrice(price)).append(",");
 				}else if("sch_cp".equals(type)){
 					price = fproductmny;
-					tzmny = tzmny + price;
+					tzmny = tzmny + Double.valueOf(CommUtil.toTurnPrice(price));
 					//renderJs("0".equals(CommUtil.toInteger(price)) ? IConstant.MSG_SCH : CommUtil.toInteger(price));
 					prices.append(schemeBVO.getVdef1() + ":").append("0".equals(CommUtil.toInteger(price)) ? IConstant.MSG_SCH : CommUtil.toInteger(price)).append(",");
 				}
@@ -1574,7 +1574,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				prices.append(schemeBVO.getVdef1() + ":").append(IConstant.MSG_SCH).append(",");
 			}
 		}
-		prices.append("t:" + CommUtil.toTurnPrice(tzmny * 0.95)).append(",");
+		prices.append("t:" + CommUtil.toTurnPriceC(tzmny)).append(",");
 		
 		return prices.toString().substring(0, prices.length()-1);
 	}
@@ -1715,9 +1715,12 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		//String bomStr = "[{\"diySubCont\":[{\"name\":\"下摆\",\"vsname\":\"xiabai\",\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XB\"},{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\"},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\"},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\"},{\"name\":\"撞色部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头/胸袋\",\"appendCode\":\"11141191633\",\"code\":\"02/03\"},\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"vsname\":\"\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141191633\",\"code\":\"01\"},\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"vsname\":\"\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190420\",\"code\":\"01\"},\"code\":\"SY\"}],\"diyName\":\"西服上衣\",\"diyCode\":\"01\",\"diyFra\":{\"name\":\"毛绒素色蓝\",\"code\":\"11113150006\",\"id\":\"154\",\"specname\":\"1#jk\"},\"diyPro\":\"19\",\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}}}]";
 		//String bomStr = "[{\"diyLin\":{\"lining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色/标配\",\"code\":\"SS\",\"specname\":\"\"}},\"diyCode\":\"01\",\"diyPro\":\"19\",\"diySubCont\":[{\"selValue\":{\"name\":\"圆角\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下摆\",\"vsname\":\"xiabai\",\"code\":\"XB\"},{\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\"},{\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\"},{\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\"}],\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11111350014\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"}}]";
 		//String bomStr = "[{\"diyFra\":{\"name\":\"毛绒素色黑\",\"code\":\"11113110002\",\"id\":\"152\",\"specname\":\"有效幅宽148CM# Gr.435g/m 36s/2*36s/2 W90% WS10%    (NATSUN 2015/I)\"},\"diyCode\":\"05\",\"diyLin\":{},\"diySubCont\":[{\"name\":\"撞色部位\",\"code\":\"ZW\",\"selValue\":{\"name\":\"领子/克夫\",\"appendCode\":\"11121481004\",\"code\":\"01/03\"},\"vsname\":\"zhuangse\"}],\"diyPro\":\"25\",\"diyName\":\"长袖  衬衣\"}]";
-		//String bomStr = "[{\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11112351896\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"},\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"涤粘花纹白\",\"code\":\"SS\",\"specname\":\"有效幅宽144CM#52%T 48%R 68D*120D\"},\"sleeveLining\":{\"name\":\"涤纶条白\",\"code\":\"SS\",\"specname\":\"有效幅宽148CM,100%涤纶 68D*68D\"}},\"diySubCont\":[{\"name\":\"扣位数\",\"code\":\"K\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"vsname\":\"kouweishu\"},{\"name\":\"下袋\",\"code\":\"XD\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"vsname\":\"xiadai\"},{\"name\":\"票袋\",\"code\":\"PD\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"vsname\":\"piaodai\"},{\"name\":\"撞色部位\",\"code\":\"ZW\",\"selValue\":{\"name\":\"领子\",\"appendCode\":\"11141131634\",\"code\":\"01\"},\"vsname\":\"zhuangse\"},{\"name\":\"贴布部位\",\"code\":\"TW\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141131634\",\"code\":\"01\"},\"vsname\":\"tiebu\"},{\"name\":\"特殊锁眼\",\"code\":\"SY\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190433\",\"code\":\"01\"},\"vsname\":\"suoyan\"}],\"diyPro\":\"19\",\"diyName\":\"西服上衣\"}]";
+		//String bomStr = "[{\"diyFra\":{\"name\":\"全羊绒条蓝\",\"code\":\"11112351896\",\"id\":\"107\",\"specname\":\"SUPER 130S 100%WV 255-265GR/MT *150CM\"},\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"涤粘花纹白\",\"code\":\"SS\",\"specname\":\"有效幅宽144CM#52%T 48%R 68D*120D\"},\"sleeveLining\":{\"name\":\"涤纶条白\",\"code\":\"SS\",\"specname\":\"有效幅宽148CM,100%涤纶 68D*68D\"}},\"diySubCont\":[{\"name\":\"扣位数\",\"code\":\"K\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"vsname\":\"kouweishu\"},{\"name\":\"下袋\",\"code\":\"XD\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"vsname\":\"xiadai\"},{\"name\":\"票袋\",\"code\":\"PD\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"vsname\":\"piaodai\"},{\"name\":\"撞色部位\",\"code\":\"ZW\",\"selValue\":{\"name\":\"领子\",\"appendCode\":\"11141131634\",\"code\":\"01\"},\"vsname\":\"zhuangse\"},{\"name\":\"贴布部位\",\"code\":\"TW\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141131634\",\"code\":\"01\"},\"vsname\":\"tiebu\"},{\"name\":\"特殊锁眼\",\"code\":\"SY\",\"selValue\":{\"name\":\"驳头眼\",\"appendCode\":\"1302190433\",\"code\":\"no\"},\"vsname\":\"suoyan\"}],\"diyPro\":\"19\",\"diyName\":\"西服上衣\"}]";
 		//String bomStr = "[{\"diyPro\":\"19\",\"diyCode\":\"01\",\"diyLin\":{\"lining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"}},\"diyName\":\"西服上衣\",\"diySubCont\":[{\"name\":\"扣位数\",\"vsname\":\"kouweishu\",\"code\":\"K\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"}},{\"name\":\"下袋\",\"vsname\":\"xiadai\",\"code\":\"XD\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"}},{\"name\":\"票袋\",\"vsname\":\"piaodai\",\"code\":\"PD\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"}}],\"diyFra\":{\"name\":\"全羊绒花纹灰\",\"code\":\"11111530001\",\"id\":\"101\",\"specname\":\"有效幅宽150CM# 100%WV Super130s 295-305GR/MT *150CM \"}}]";
 		//String bomStr = "[{\"diyLin\":{\"lining\":{\"name\":\"顺色\",\"specname\":\"\",\"code\":\"SS\"},\"sleeveLining\":{\"name\":\"顺色\",\"specname\":\"\",\"code\":\"SS\"}},\"diyCode\":\"01\",\"diySubCont\":[{\"name\":\"扣位数\",\"code\":\"K\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"vsname\":\"kouweishu\"},{\"name\":\"下袋\",\"code\":\"XD\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"vsname\":\"xiadai\"},{\"name\":\"票袋\",\"code\":\"PD\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"vsname\":\"piaodai\"},{\"name\":\"纽扣号\",\"code\":\"NH\",\"selValue\":{\"name\":\"尿素扣蓝\",\"appendCode\":\"\",\"code\":\"1301350916\"},\"vsname\":\"niukouhao\"}],\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"全羊绒条黑\",\"specname\":\"有效幅宽148CM#SUPER 110S 100%WV 255-265GR/MT *150CM\",\"code\":\"11111310005\",\"id\":\"109\"},\"diyPro\":\"19\"}]";
+		//String bomStr = "[{\"diyFra\":{\"name\":\"毛涤素色灰\",\"code\":\"11114131854\",\"id\":\"1543\",\"specname\":\"有效幅宽148CM#70%W30%T\"},\"diyLin\":{\"lining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"}},\"diyCode\":\"01\",\"diySubCont\":[{\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"name\":\"扣位数\",\"code\":\"K\",\"vsname\":\"kouweishu\"},{\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"name\":\"下袋\",\"code\":\"XD\",\"vsname\":\"xiadai\"},{\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"票袋\",\"code\":\"PD\",\"vsname\":\"piaodai\"},{\"selValue\":{\"name\":\"尿素扣黑\",\"appendCode\":\"\",\"code\":\"1301310336\"},\"name\":\"纽扣号\",\"code\":\"NH\",\"vsname\":\"niukouhao\"},{\"selValue\":{\"name\":\"无\",\"appendCode\":\"\",\"code\":\"00\"},\"name\":\"特殊锁眼\",\"code\":\"SY\",\"vsname\":\"suoyan\"},{\"selValue\":{\"name\":\"无\",\"appendCode\":\"\",\"code\":\"no\"},\"name\":\"珠边工艺\",\"code\":\"ZB\",\"vsname\":\"zhubian\"}],\"diyPro\":\"19\",\"diyName\":\"西服上衣\"}]";
+		//String bomStr = "[{\"diyCode\":\"01\",\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"毛涤素色灰\",\"code\":\"11114131854\",\"id\":\"1543\",\"specname\":\"有效幅宽148CM#70%W30%T\"},\"diyLin\":{\"lining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"}},\"diyPro\":\"19\",\"diySubCont\":[{\"name\":\"扣位数\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"vsname\":\"kouweishu\",\"code\":\"K\"},{\"name\":\"下袋\",\"selValue\":{\"name\":\"双明贴袋\",\"appendCode\":\"\",\"code\":\"1\"},\"vsname\":\"xiadai\",\"code\":\"XD\"},{\"name\":\"票袋\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"vsname\":\"piaodai\",\"code\":\"PD\"},{\"name\":\"纽扣号\",\"selValue\":{\"name\":\"尿素扣黑\",\"appendCode\":\"\",\"code\":\"1301310336\"},\"vsname\":\"niukouhao\",\"code\":\"NH\"},{\"name\":\"撞色部位\",\"selValue\":{\"name\":\"胸袋/驳头/领子/下袋\",\"appendCode\":\"11141131634\",\"code\":\"03/02/01/04\"},\"vsname\":\"zhuangse\",\"code\":\"ZW\"},{\"name\":\"贴布部位\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11141431877\",\"code\":\"01\"},\"vsname\":\"tiebu\",\"code\":\"TW\"},{\"name\":\"特殊锁眼\",\"selValue\":{\"name\":\"无\",\"appendCode\":\"\",\"code\":\"no\"},\"vsname\":\"suoyan\",\"code\":\"SY\"},{\"name\":\"珠边工艺\",\"selValue\":{\"name\":\"无\",\"appendCode\":\"\",\"code\":\"no\"},\"vsname\":\"zhubian\",\"code\":\"ZB\"}]}]";
+		//String bomStr = "[{\"diyCode\":\"01\",\"diyName\":\"西服上衣\",\"diyFra\":{\"name\":\"毛涤素色灰\",\"code\":\"11114131854\",\"id\":\"1543\",\"specname\":\"有效幅宽148CM#70%W30%T\"},\"diyLin\":{\"lining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"},\"sleeveLining\":{\"name\":\"顺色\",\"code\":\"SS\",\"specname\":\"\"}},\"diyPro\":\"19\",\"diySubCont\":[{\"name\":\"扣位数\",\"selValue\":{\"name\":\"单排两扣(1*2)\",\"appendCode\":\"\",\"code\":\"12\"},\"code\":\"K\",\"vsname\":\"kouweishu\"},{\"name\":\"下袋\",\"selValue\":{\"name\":\"平口袋带袋盖\",\"appendCode\":\"\",\"code\":\"2\"},\"code\":\"XD\",\"vsname\":\"xiadai\"},{\"name\":\"票袋\",\"selValue\":{\"name\":\"无票袋\",\"appendCode\":\"\",\"code\":\"00\"},\"code\":\"PD\",\"vsname\":\"piaodai\"},{\"name\":\"纽扣号\",\"selValue\":{\"name\":\"尿素扣黑\",\"appendCode\":\"\",\"code\":\"1301310336\"},\"code\":\"NH\",\"vsname\":\"niukouhao\"},{\"name\":\"撞色部位\",\"selValue\":{\"name\":\"领子/下袋/驳头/胸袋\",\"appendCode\":\"11141431877\",\"code\":\"01/04/02/03\"},\"code\":\"ZW\",\"vsname\":\"zhuangse\"},{\"name\":\"贴布部位\",\"selValue\":{\"name\":\"肘部\",\"appendCode\":\"11112491038\",\"code\":\"01\"},\"code\":\"TW\",\"vsname\":\"tiebu\"},{\"name\":\"特殊锁眼\",\"selValue\":{\"name\":\"无\",\"appendCode\":\"\",\"code\":\"no\"},\"code\":\"SY\",\"vsname\":\"suoyan\"},{\"name\":\"珠边工艺\",\"selValue\":{\"name\":\"无\",\"appendCode\":\"\",\"code\":\"no\"},\"code\":\"ZB\",\"vsname\":\"zhubian\"}]}]";
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String bomInfo = request.getParameter("diyBom");
 		
@@ -1803,7 +1806,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		for(int k = 0; k < size; k++){
 			JSONObject objjson = subJson.getJSONObject(k);
 			//①
-			orgAccBom(list_bom,objjson,list_cf);
+			orgAccBom(list_bom,objjson,list_cf,subJson);
 		}
 		
 		System.out.println("品类id:"+diyPro);
@@ -1844,7 +1847,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				vo.setTc_aah04(bvo.getVdef1());
 				vo.setTc_aah05(bvo.getVcode());
 				vo.setTc_aah06(bvo.getVserial());
-				vo.setTc_aah07(bvo.getNunitmny()+"");
+				vo.setTc_aah07(CommUtil.round(bvo.getNunitmny(),2)+"");//四舍五入
 				vo.setTc_aah08(1+"");
 				vo.setTc_aah09(bvo.getVjobnum());
 				listbom.add(vo);
@@ -1872,7 +1875,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 * @param list_cf 耗料表
 	 * @return void
 	 */
-	public void orgAccBom(List<BtcconfigBVO> list_bom,JSONObject json,List<CfeedBVO> list_cf){
+	public void orgAccBom(List<BtcconfigBVO> list_bom,JSONObject json,List<CfeedBVO> list_cf,JSONArray subJson){
 		Object vsname = json.get("vsname");
 		Object vcode = json.get("code");
 		Object vname = json.get("name");
@@ -1885,11 +1888,11 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		
 		BtcconfigBVO bvo = new BtcconfigBVO();
 		/**撞色、贴布、特殊锁眼、珠边{层级关系}**/
-		if(!CommUtil.isNull(appendCode)){
+		if(!CommUtil.isNull(appendCode) || IConstant.PART_SNAMW_NO.equals(code)){
 			//根据vsname 区别撞色、贴布、特殊锁眼、珠边
 			if(IConstant.PART_SNAMW_ZS.equals(vsname)){
 				//撞色 部位--所有拼色面料耗料
-				Double allM = getMaxValue(subTypeJson,list_cf,vname+"");
+				Double allM = getMaxValue(subTypeJson,list_cf,vname+"",subJson);
 				//组织BOM
 				bvo.setVcode(appendCode+"");
 				bvo.setNunitmny(allM);
@@ -1899,7 +1902,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				setBomEm(list_bom,vsname+"",bvo,"n");
 			}else if(IConstant.PART_SNAMW_TB.equals(vsname)){
 				//贴布
-				Double allM = getMaxValue(subTypeJson,list_cf,"");
+				Double allM = getMaxValue(subTypeJson,list_cf,"TB",subJson);
 				//组织BOM
 				bvo.setVcode(appendCode+"");
 				bvo.setNunitmny(allM);
@@ -1940,18 +1943,24 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 * @param @return
 	 * @return Map<String,Double>
 	 */
-	public Double getMaxValue(JSONObject subTypeJson,List<CfeedBVO> list_cf,String name){
+	public Double getMaxValue(JSONObject subTypeJson,List<CfeedBVO> list_cf,String name,JSONArray subJson){
 		Double num = new Double("0.0");
 		TreeMap<String,Double> mapHL = new TreeMap<String,Double>();
 		String[] codes = (subTypeJson.get("code")+"").split("/");
+		String[] names = (subTypeJson.get("name")+"").split("/");
+		//有效耗料List
+		List<CfeedBVO> list_use = new ArrayList<CfeedBVO>();
 		if(codes != null){
 			num = Double.valueOf(codes.length);
 			for(int i = 0; i < codes.length; i++){
 				String code = codes[i];
-				for (CfeedBVO cfeedBVO : list_cf) {
+				String nm = names[i];
+				list_use.add(getUseCfBVO(code, nm, list_cf, subJson,name));
+				/*for (CfeedBVO cfeedBVO : list_cf) {
 					if(code.equals(cfeedBVO.getVcode())){
 						String st = cfeedBVO.getVstate();
-						if(!CommUtil.isNull(st)){
+						if((!CommUtil.isNull(st))){
+							//明
 							if(name.contains(st)){
 								mapHL.put(code, cfeedBVO.getNunitmny());
 							}
@@ -1959,12 +1968,21 @@ public class InterfaceAction extends BaseAction implements Serializable {
 							mapHL.put(code, cfeedBVO.getNunitmny());
 						}
 					}
-				}
+				}*/
 			}
 			//判断在多选撞色部位时，耗料以单个最多的耗料为定额标准
 			Double maxValue = new Double("0.0");
 	        String maxKey = null;
-			if(mapHL != null){
+	        if(list_use != null){
+				for(CfeedBVO cfeedBVO :list_use){
+		            Double value = cfeedBVO.getNunitmny();
+		            if(value > maxValue){
+		                maxValue = value;
+		            }
+		        }
+				num = num * maxValue;
+			}
+			/*if(mapHL != null){
 				Iterator<Entry<String, Double>> it = mapHL.entrySet().iterator();
 				for(int i=0;i<mapHL.size();i++){
 		            Entry<String, Double> entry = it.next();
@@ -1972,12 +1990,75 @@ public class InterfaceAction extends BaseAction implements Serializable {
 		            if(value > maxValue){
 		                maxValue = value;
 		                maxKey = entry.getKey().toString();
-		                num = num * maxValue;
 		            }
 		        }
-			}
+				num = num * maxValue;
+			}*/
 		}
 		return num;
+	}
+	
+	//获取相应的耗料VO
+	public CfeedBVO getUseCfBVO(String code,String nm,List<CfeedBVO> list_cf,JSONArray subJson,String lab){
+		CfeedBVO vo = null;
+		if(list_cf != null){
+			Integer cnum = 0;
+			List<CfeedBVO> list_use = new ArrayList<CfeedBVO>();
+			for (CfeedBVO cfeedBVO : list_cf) {
+				if(code != null){
+					if(code.equals(cfeedBVO.getVcode())){
+						list_use.add(cfeedBVO);
+						cnum++;
+					}
+				}
+			}
+			
+			if(cnum == 1){
+				if("TB".equals(lab)){
+					if("TB".equals(list_use.get(0).getVstate())){
+						vo = list_use.get(0);
+					}
+				}else{
+					vo = list_use.get(0);
+				}
+			}else if(cnum == 2){
+				if("TB".equals(lab)){
+					for (CfeedBVO cfeedBVO : list_use) {
+						if("TB".equals(cfeedBVO.getVstate())){
+							vo = cfeedBVO;
+							break;
+						}
+					}
+				}else{
+					String sts = "无";
+					Integer size = subJson.size();
+					for(int k = 0; k < size; k++){
+						JSONObject objjson = subJson.getJSONObject(k);
+						//撞色部位
+						if(nm != null){
+							if(nm.equals(objjson.getString("name"))){
+								JSONObject sv = objjson.getJSONObject("selValue");
+								if(sv != null){
+									String svname = sv.getString("name");
+									if(svname != null){
+										if(svname.contains("明")){
+											sts = "明";
+										}
+									}
+								}
+							}
+						}
+					}
+					for (CfeedBVO cfeedBVO : list_use) {
+						if(sts.equals(cfeedBVO.getVstate())){
+							vo = cfeedBVO;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return vo;
 	}
 	
 	/**
@@ -2098,6 +2179,57 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	}
 	
 	/**
+	 * @Description: 根据面料获取顺色数据
+	 * @param @param fracode
+	 * @param @param vsn
+	 * @param @return
+	 * @return String
+	 */
+	public void getSSCodeByFra(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String proclassid = request.getParameter("proclassId");
+		String fracode = request.getParameter("fraCode");
+		
+		String INF = null;
+		
+		StringBuffer info = new StringBuffer("{");
+		//里料
+		String sql_lining = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+		Object[] sscode_lining = getVOBySQL(sql_lining);
+		if(sscode_lining != null){
+			info.append("\"lining\":{\"code\":\""+sscode_lining[0]+"\",\"name\":\""+sscode_lining[1]+"\"},");
+		}
+		//袖里料
+		String sql_sleeveLining = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisXLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+		Object[] sscode_sleeveLining = getVOBySQL(sql_sleeveLining);
+		if(sscode_sleeveLining != null){
+			info.append("\"sleeveLining\":{\"code\":\""+sscode_sleeveLining[0]+"\",\"name\":\""+sscode_sleeveLining[1]+"\"},");
+		}
+		//后背
+		String sql_backFabric = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisHBLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+		Object[] sscode_backFabric = getVOBySQL(sql_backFabric);
+		if(sscode_backFabric != null){
+			info.append("\"backFabric\":{\"code\":\""+sscode_backFabric[0]+"\",\"name\":\""+sscode_backFabric[1]+"\"},");
+		}
+		//拉链
+		String sql_lalian = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.iciszipper where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+		Object[] sscode_lalian = getVOBySQL(sql_lalian);
+		if(sscode_lalian != null){
+			info.append("\"lalian\":{\"code\":\""+sscode_lalian[0]+"\",\"name\":\""+sscode_lalian[1]+"\"},");
+		}
+		//袋布
+		String sql_daibu = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisBagging where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+		Object[] sscode_daibu = getVOBySQL(sql_daibu);
+		if(sscode_daibu != null){
+			info.append("\"daibu\":{\"code\":\""+sscode_daibu[0]+"\",\"name\":\""+sscode_daibu[1]+"\"},");
+		}
+		if(info.length() > 1){
+			INF = info.substring(0, info.length()-1) + "}";
+		}
+		renderJson(INF);
+	}
+	
+	/**
 	 * @Description:更新BOM
 	 * @param @param list_bom
 	 * @param @param vsn
@@ -2114,13 +2246,16 @@ public class InterfaceAction extends BaseAction implements Serializable {
 				cBVO.setNunitmny(dh);
 				//规格
 				cBVO.setVspec(btvo.getVspec());
+				cBVO.setVserial(btvo.getVserial());
+				cBVO.setVjobnum(btvo.getVjobnum());
 				list_bom.add(cBVO);
 			}else{
 				/*List<BtcconfigBVO> list_bom_tem = new ArrayList<BtcconfigBVO>();
 				for (BtcconfigBVO btcconfigBVO : list_bom) {
 					list_bom_tem.add(btcconfigBVO);
 				}*/
-				for (BtcconfigBVO btcconfigBVO : list_bom) {
+				for (int i = 0; i < list_bom.size(); i++) {
+					BtcconfigBVO btcconfigBVO = list_bom.get(i);
 					String vsname = btcconfigBVO.getVsname();
 					if(vsn.equals(vsname) && fg == null){//本有面料、里料
 						if(!CommUtil.isNull(btvo.getVcode())){
@@ -2147,7 +2282,7 @@ public class InterfaceAction extends BaseAction implements Serializable {
 						break;
 					}else if(vsn.equals(vsname) &&"y".equals(fg)){//特殊锁眼、珠边（改变编码）
 						if(IConstant.PART_SNAMW_NO.equals(btvo.getVcode())){
-							list_bom.remove(btcconfigBVO);
+							list_bom.remove(i);
 							break;
 						}
 						if(!CommUtil.isNull(btvo.getVcode())){
@@ -2527,6 +2662,15 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 */
 	public Object getStrBySQL(String sql){
 		return iHibernateDAO.getFirstBySQL("select * from ("+sql+") tb", null);
+	}
+	
+	public Object[] getVOBySQL(String sql){
+		Object[] ay = null;
+		Object array = iHibernateDAO.getFirstBySQL("select * from ("+sql+") tb", null);
+		if(array != null){
+			ay = (Object[])array;
+		}
+		return ay;
 	}
 	
 	public IHibernateDAO getiHibernateDAO() {
