@@ -2184,48 +2184,96 @@ public class InterfaceAction extends BaseAction implements Serializable {
 	 * @param @param vsn
 	 * @param @return
 	 * @return String
+	 *...有优化SQL空间
 	 */
 	public void getSSCodeByFra(){
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String proclassid = request.getParameter("proclassId");
 		String fracode = request.getParameter("fraCode");
 		
-		String INF = null;
+		String INF = "{}";
+		if(proclassid != null && fracode != null && proclassid != "" && fracode != ""){
+			/**
+			 * 通过品类获得BOM标配信息
+			 */
+			List<BtcconfigBVO> list_bom = getBOMByPro(proclassid+"");
+			
+			StringBuffer info = new StringBuffer("{");
+			//里料
+			String sql_lining = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+			Object[] sscode_lining = getVOBySQL(sql_lining);
+			if(sscode_lining != null){
+				info.append("\"lining\":{\"code\":\""+sscode_lining[0]+"\",\"name\":\""+sscode_lining[1]+"\"},");
+			}else{
+				if(list_bom != null){
+					for (BtcconfigBVO cvo : list_bom) {
+						String snm = cvo.getVsname();
+						if("lining".equals(snm)){
+							info.append("\"lining\":{\"code\":\""+cvo.getVcode()+"\",\"name\":\""+getStrBySQL("select vname from fz_auxiliary where vcode='"+cvo.getVcode()+"'")+"\"},");
+							break;
+						}
+					}
+				}
+			}
+			//袖里料
+			String sql_sleeveLining = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisXLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+			Object[] sscode_sleeveLining = getVOBySQL(sql_sleeveLining);
+			if(sscode_sleeveLining != null){
+				info.append("\"sleeveLining\":{\"code\":\""+sscode_sleeveLining[0]+"\",\"name\":\""+sscode_sleeveLining[1]+"\"},");
+			}else{
+				if(list_bom != null){
+					for (BtcconfigBVO cvo : list_bom) {
+						String snm = cvo.getVsname();
+						if("sleeveLining".equals(snm)){
+							info.append("\"sleeveLining\":{\"code\":\""+cvo.getVcode()+"\",\"name\":\""+getStrBySQL("select vname from fz_auxiliary where vcode='"+cvo.getVcode()+"'")+"\"},");
+							break;
+						}
+					}
+				}
+			}
+			//后背
+			String sql_backFabric = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisHBLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+			Object[] sscode_backFabric = getVOBySQL(sql_backFabric);
+			if(sscode_backFabric != null){
+				info.append("\"backFabric\":{\"code\":\""+sscode_backFabric[0]+"\",\"name\":\""+sscode_backFabric[1]+"\"},");
+			}else{
+				if(list_bom != null){
+					for (BtcconfigBVO cvo : list_bom) {
+						String snm = cvo.getVsname();
+						if("backFabric".equals(snm)){
+							info.append("\"backFabric\":{\"code\":\""+cvo.getVcode()+"\",\"name\":\""+getStrBySQL("select vname from fz_auxiliary where vcode='"+cvo.getVcode()+"'")+"\"},");
+							break;
+						}
+					}
+				}
+			}
+			//拉链
+			/*String sql_lalian = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.iciszipper where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+			Object[] sscode_lalian = getVOBySQL(sql_lalian);
+			if(sscode_lalian != null){
+				info.append("\"lalian\":{\"code\":\""+sscode_lalian[0]+"\",\"name\":\""+sscode_lalian[1]+"\"},");
+			}*/
+			//袋布
+			String sql_daibu = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisBagging where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
+			Object[] sscode_daibu = getVOBySQL(sql_daibu);
+			if(sscode_daibu != null){
+				info.append("\"daibu\":{\"code\":\""+sscode_daibu[0]+"\",\"name\":\""+sscode_daibu[1]+"\"},");
+			}else{
+				if(list_bom != null){
+					for (BtcconfigBVO cvo : list_bom) {
+						String snm = cvo.getVsname();
+						if("daibu".equals(snm)){
+							info.append("\"daibu\":{\"code\":\""+cvo.getVcode()+"\",\"name\":\""+getStrBySQL("select vname from fz_auxiliary where vcode='"+cvo.getVcode()+"'")+"\"},");
+							break;
+						}
+					}
+				}
+			}
+			if(info.length() > 1){
+				INF = info.substring(0, info.length()-1) + "}";
+			}
+		}
 		
-		StringBuffer info = new StringBuffer("{");
-		//里料
-		String sql_lining = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
-		Object[] sscode_lining = getVOBySQL(sql_lining);
-		if(sscode_lining != null){
-			info.append("\"lining\":{\"code\":\""+sscode_lining[0]+"\",\"name\":\""+sscode_lining[1]+"\"},");
-		}
-		//袖里料
-		String sql_sleeveLining = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisXLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
-		Object[] sscode_sleeveLining = getVOBySQL(sql_sleeveLining);
-		if(sscode_sleeveLining != null){
-			info.append("\"sleeveLining\":{\"code\":\""+sscode_sleeveLining[0]+"\",\"name\":\""+sscode_sleeveLining[1]+"\"},");
-		}
-		//后背
-		String sql_backFabric = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisHBLining where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_LINING+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
-		Object[] sscode_backFabric = getVOBySQL(sql_backFabric);
-		if(sscode_backFabric != null){
-			info.append("\"backFabric\":{\"code\":\""+sscode_backFabric[0]+"\",\"name\":\""+sscode_backFabric[1]+"\"},");
-		}
-		//拉链
-		String sql_lalian = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.iciszipper where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
-		Object[] sscode_lalian = getVOBySQL(sql_lalian);
-		if(sscode_lalian != null){
-			info.append("\"lalian\":{\"code\":\""+sscode_lalian[0]+"\",\"name\":\""+sscode_lalian[1]+"\"},");
-		}
-		//袋布
-		String sql_daibu = "select c.vcode,c.vname from fz_auxiliary a left join fz_auxiliary_b b on a.id=b.auxiliaryId left join fz_auxiliary c on c.id=b.icisBagging where a.vmoduletype='"+IConstant.MOD_FABRIC+"' and c.vmoduletype='"+IConstant.MOD_ACCESSORIES+"' and a.vcode='"+fracode+"' and b.proclassid="+proclassid;
-		Object[] sscode_daibu = getVOBySQL(sql_daibu);
-		if(sscode_daibu != null){
-			info.append("\"daibu\":{\"code\":\""+sscode_daibu[0]+"\",\"name\":\""+sscode_daibu[1]+"\"},");
-		}
-		if(info.length() > 1){
-			INF = info.substring(0, info.length()-1) + "}";
-		}
 		renderJson(INF);
 	}
 	
