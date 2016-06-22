@@ -74,6 +74,7 @@ html { overflow-x: auto; overflow-y: auto; border:0;}
 <SCRIPT type="text/javascript">
 $(function(){
 	$("#search_input").keyup(function(){
+	     $(this).css("background-color","#FFFFCC");
 		 delay(function(){
 			 gridload('pttg');
 		 }, 500 );
@@ -119,7 +120,7 @@ $(function(){
 		url:'${pageContext.request.contextPath}/lining!getLiningJson',
 		method:'get',
 		pagination:true,
-		onDblClickRow:
+		onDblClickRow:        //双击表格中datagrid的某一行
 	           function () {
 	               //单击行的时候，将单选按钮设置为选中
 	               var selectRow = $('#pttg').datagrid("getSelected");
